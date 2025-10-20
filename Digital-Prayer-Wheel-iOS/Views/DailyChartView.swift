@@ -109,7 +109,7 @@ struct BarChartView: View {
 
     // 添加示例数据
     for i in 0..<7 {
-        if let date = Calendar.current.date(byAdding: .day, value: -i, to: Date()) {
+        if Calendar.current.date(byAdding: .day, value: -i, to: Date()) != nil {
             stats.updateTodayCount(
                 for: "南无阿弥陀佛",
                 countExponent: 8 + i,

@@ -86,13 +86,16 @@ class VideoRecorder: NSObject, ObservableObject {
             self.appendSampleBuffer(sampleBuffer)
 
             // 检查是否已录制5秒
-            Task { @MainActor in
-                if let start = self.startTime {
-                    let elapsed = Date().timeIntervalSince(start)
-                    self.recordingProgress = min(elapsed / self.recordingDuration, 1.0)
+            if let start = self.startTime {
+                let elapsed = Date().timeIntervalSince(start)
 
-                    if elapsed >= self.recordingDuration {
-                        // 录制完成
+                Task { @MainActor in
+                    self.recordingProgress = min(elapsed / self.recordingDuration, 1.0)
+                }
+
+                if elapsed >= self.recordingDuration {
+                    // 录制完成
+                    Task { @MainActor in
                         self.stopCapture()
                         self.finishWriting(url: videoURL, completion: completion)
                     }
@@ -126,6 +129,7 @@ class VideoRecorder: NSObject, ObservableObject {
             assetWriter = try AVAssetWriter(url: url, fileType: .mp4)
 
             // 获取屏幕尺寸
+            // TODO: iOS 26+ 应该从视图上下文获取，但录制器类中暂时保留此方法
             let screenSize = UIScreen.main.bounds.size
             let screenScale = UIScreen.main.scale
             let videoWidth = Int(screenSize.width * screenScale)
@@ -190,7 +194,7 @@ class VideoRecorder: NSObject, ObservableObject {
 
     /// 完成写入并返回URL
     private func finishWriting(url: URL, completion: @escaping (URL?) -> Void) {
-        guard let assetWriter = assetWriter else {
+        guard let writer = assetWriter else {
             Task { @MainActor in
                 recordingError = "写入器未初始化"
                 isRecording = false
@@ -203,16 +207,19 @@ class VideoRecorder: NSObject, ObservableObject {
         videoInput?.markAsFinished()
 
         // 完成写入
-        assetWriter.finishWriting { [weak self] in
+        writer.finishWriting { [weak self] in
+            let status = writer.status
+            let error = writer.error
+
             Task { @MainActor in
                 guard let self = self else { return }
 
                 self.isRecording = false
 
-                if assetWriter.status == .completed {
+                if status == .completed {
                     print("✅ 视频已保存: \(url.path())")
                     completion(url)
-                } else if let error = assetWriter.error {
+                } else if let error = error {
                     self.recordingError = "保存失败: \(error.localizedDescription)"
                     completion(nil)
                 } else {
