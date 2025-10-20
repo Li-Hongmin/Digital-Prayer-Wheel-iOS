@@ -6,6 +6,7 @@
 //  iPad-specific prayer wheel view with horizontal landscape layout
 
 import SwiftUI
+import Combine
 
 /// iPad-specific prayer wheel view with horizontal split layout
 struct iPadPrayerWheelView: View {

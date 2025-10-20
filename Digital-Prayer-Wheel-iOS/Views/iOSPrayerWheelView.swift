@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 /// iOS-specific prayer wheel view with vertical layout
 struct iOSPrayerWheelView: View {
