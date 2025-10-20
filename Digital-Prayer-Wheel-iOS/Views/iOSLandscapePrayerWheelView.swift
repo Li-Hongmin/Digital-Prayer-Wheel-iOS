@@ -16,13 +16,10 @@ struct iOSLandscapePrayerWheelView: View {
     @Environment(\.responsiveScale) var responsiveScale
 
     @StateObject var tabletLibrary = TabletLibrary()
-    @StateObject var videoRecorder = VideoRecorder.shared
     @State private var showHelp: Bool = false
     @State private var showLeftTablet: Bool = false
     @State private var showRightTablet: Bool = false
-    @State private var showShareSheet: Bool = false
     @State private var showCalendar: Bool = false
-    @State private var videoURL: URL?
     @State private var rotation: Double = 0
     @State private var rotationTimer: Timer?
     @State private var isRotating: Bool = false
@@ -346,48 +343,6 @@ struct iOSLandscapePrayerWheelView: View {
                 settings: settings,  // 使用传入的共享实例，避免重复创建
                 prayerLibrary: prayerLibrary
             )
-        }
-        .sheet(isPresented: $showShareSheet) {
-            if let url = videoURL {
-                ActivityViewController(items: [url])
-            }
-        }
-        .alert("录制失败", isPresented: .constant(videoRecorder.recordingError != nil)) {
-            Button("确定") {
-                videoRecorder.recordingError = nil
-            }
-        } message: {
-            Text(videoRecorder.recordingError ?? "")
-        }
-    }
-
-    // MARK: - 视频录制和分享功能
-
-    private func startVideoRecording() {
-        // 确保转经筒正在转动
-        if !isRotating {
-            startRotation()
-        }
-
-        // 震动反馈：开始录制
-        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-        impactFeedback.impactOccurred()
-
-        // 开始录制5秒视频
-        videoRecorder.startRecording { url in
-            guard let url = url else {
-                return
-            }
-
-            // 震动反馈：录制完成
-            let successFeedback = UINotificationFeedbackGenerator()
-            successFeedback.notificationOccurred(.success)
-
-            // 录制成功，保存URL并打开分享表
-            Task { @MainActor in
-                videoURL = url
-                showShareSheet = true
-            }
         }
     }
 
