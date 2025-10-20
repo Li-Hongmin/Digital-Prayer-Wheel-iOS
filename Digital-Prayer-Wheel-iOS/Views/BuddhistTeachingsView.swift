@@ -95,10 +95,10 @@ struct BuddhistTeachingsView: View {
                                         ForEach(0..<5, id: \.self) { index in
                                             HStack(spacing: scale.size(4)) {
                                                 Text("\(index + 1)")
-                                                    .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
+                                                    .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
                                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                                 Text(teaching.content[index])
-                                                    .font(.system(size: scale.fontSize(13), weight: .medium))
+                                                    .font(.system(size: scale.fontSize(11), weight: .medium))
                                                     .foregroundColor(.white)
                                             }
                                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -110,10 +110,10 @@ struct BuddhistTeachingsView: View {
                                         ForEach(5..<10, id: \.self) { index in
                                             HStack(spacing: scale.size(4)) {
                                                 Text("\(index + 1)")
-                                                    .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
+                                                    .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
                                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                                 Text(teaching.content[index])
-                                                    .font(.system(size: scale.fontSize(13), weight: .medium))
+                                                    .font(.system(size: scale.fontSize(11), weight: .medium))
                                                     .foregroundColor(.white)
                                             }
                                             .frame(maxWidth: .infinity, alignment: .leading)
