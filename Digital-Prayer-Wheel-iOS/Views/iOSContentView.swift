@@ -26,12 +26,14 @@ struct iOSContentView: View {
                         // 横屏：三栏布局（左侧十大愿 + 中间转经筒 + 右侧净业正因）
                         iOSLandscapePrayerWheelView(
                             prayerLibrary: prayerLibrary,
+                            settings: settings,
                             showSettings: $showSettings
                         )
                     } else {
                         // 竖屏：纵向布局（上方转经筒 + 下方教导内容）
                         iOSPrayerWheelView(
                             prayerLibrary: prayerLibrary,
+                            settings: settings,
                             showSettings: $showSettings
                         )
                     }

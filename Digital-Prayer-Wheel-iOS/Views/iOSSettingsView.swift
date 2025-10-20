@@ -192,6 +192,45 @@ struct iOSSettingsView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
 
+                        // 回向偈选择
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("回向偈")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(.secondary)
+
+                            Picker("回向偈", selection: $settings.selectedDedicationVerse) {
+                                Text("回向偈一").tag(1)
+                                Text("回向偈二").tag(2)
+                                Text("回向偈三").tag(3)
+                                Text("回向偈四").tag(4)
+                            }
+                            .pickerStyle(.segmented)
+
+                            // 预览当前选择的回向偈
+                            let verses: [Int: [String]] = [
+                                1: ["愿以此功德。庄严佛净土。", "上报四重恩。下济三途苦。"],
+                                2: ["愿以此功德，普及于一切。", "我等与众生，皆共成佛道。"],
+                                3: ["愿我临近命终时，尽除一切诸障碍，", "面见彼佛阿弥陀，即得往生安乐刹。"],
+                                4: ["愿生西方净土中，九品莲花为父母。", "花开见佛悟无生，不退菩萨为伴侣。"]
+                            ]
+                            let currentVerse = verses[settings.selectedDedicationVerse] ?? verses[1]!
+
+                            VStack(alignment: .center, spacing: 4) {
+                                ForEach(currentVerse, id: \.self) { line in
+                                    Text(line)
+                                        .font(.system(size: 10, weight: .regular))
+                                        .foregroundColor(.secondary)
+                                        .multilineTextAlignment(.center)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 6)
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 10)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+
                         Spacer()
                     }
                 }

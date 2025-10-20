@@ -81,6 +81,13 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // 回向偈选择（1-4）
+    @Published var selectedDedicationVerse: Int {
+        didSet {
+            saveSettings()
+        }
+    }
+
     init(
         selectedPrayerType: String = "南无阿弥陀佛",  // 默认经文
         barrageDisplayType: String = "fullscreen",  // 默认全屏弹幕
@@ -91,7 +98,8 @@ class AppSettings: ObservableObject {
         barrageIntervalSlider: Double = 70.0,  // 默认对应0.8秒左右
         windowAlwaysOnTop: Bool = false,
         keepScreenOn: Bool = true,  // 默认打开防止息屏
-        keepBackgroundActive: Bool = true  // 默认打开后台运行
+        keepBackgroundActive: Bool = true,  // 默认打开后台运行
+        selectedDedicationVerse: Int = 1  // 默认回向偈一
     ) {
         // 从UserDefaults加载设置
         self.selectedPrayerType = UserDefaults.standard.string(forKey: "selectedPrayerType") ?? selectedPrayerType
@@ -106,6 +114,10 @@ class AppSettings: ObservableObject {
         // 加载防止息屏和后台运行设置，默认为 true
         self.keepScreenOn = UserDefaults.standard.object(forKey: "keepScreenOn") != nil ? UserDefaults.standard.bool(forKey: "keepScreenOn") : keepScreenOn
         self.keepBackgroundActive = UserDefaults.standard.object(forKey: "keepBackgroundActive") != nil ? UserDefaults.standard.bool(forKey: "keepBackgroundActive") : keepBackgroundActive
+
+        // 加载回向偈选择
+        let savedVerse = UserDefaults.standard.integer(forKey: "selectedDedicationVerse")
+        self.selectedDedicationVerse = (savedVerse >= 1 && savedVerse <= 4) ? savedVerse : selectedDedicationVerse
 
         // 应用屏幕设置
         applyScreenSettings()
@@ -123,6 +135,7 @@ class AppSettings: ObservableObject {
         UserDefaults.standard.set(windowAlwaysOnTop, forKey: "windowAlwaysOnTop")
         UserDefaults.standard.set(keepScreenOn, forKey: "keepScreenOn")
         UserDefaults.standard.set(keepBackgroundActive, forKey: "keepBackgroundActive")
+        UserDefaults.standard.set(selectedDedicationVerse, forKey: "selectedDedicationVerse")
     }
 
     // 应用屏幕设置

@@ -11,6 +11,7 @@ import Combine
 /// iOS-specific prayer wheel view with vertical layout
 struct iOSPrayerWheelView: View {
     @ObservedObject var prayerLibrary: PrayerLibrary
+    @ObservedObject var settings: AppSettings
     @Binding var showSettings: Bool
     @Environment(\.responsiveScale) var responsiveScale
 
@@ -184,6 +185,11 @@ struct iOSPrayerWheelView: View {
             BuddhistTeachingsView(initiallyExpanded: true)
                 .padding(.horizontal, scale.size(16))
                 .padding(.vertical, scale.size(8))
+
+            // 回向偈 - 最下方
+            DedicationVerseView(settings: settings)
+                .padding(.horizontal, scale.size(16))
+                .padding(.bottom, scale.size(8))
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .onChange(of: prayerLibrary.countExponent) { _, _ in
@@ -255,6 +261,7 @@ struct iOSPrayerWheelView: View {
     @Previewable @State var showSettings = false
     return iOSPrayerWheelView(
         prayerLibrary: PrayerLibrary(),
+        settings: AppSettings(),
         showSettings: $showSettings
     )
 }

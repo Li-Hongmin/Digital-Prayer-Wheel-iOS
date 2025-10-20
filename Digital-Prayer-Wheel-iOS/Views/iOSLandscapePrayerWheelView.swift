@@ -11,6 +11,7 @@ import Combine
 /// iOS 横屏祈祷轮视图（三栏布局：左侧十大愿 + 中间转经筒 + 右侧计数/净业正因）
 struct iOSLandscapePrayerWheelView: View {
     @ObservedObject var prayerLibrary: PrayerLibrary
+    @ObservedObject var settings: AppSettings
     @Binding var showSettings: Bool
     @Environment(\.responsiveScale) var responsiveScale
 
@@ -199,6 +200,11 @@ struct iOSLandscapePrayerWheelView: View {
             }
             .padding(.horizontal, scale.size(12))
             .padding(.vertical, scale.size(8))
+
+            // 回向偈 - 最下方（横屏）
+            DedicationVerseView(settings: settings)
+                .padding(.horizontal, scale.size(16))
+                .padding(.bottom, scale.size(8))
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .onChange(of: prayerLibrary.countExponent) { _, _ in
@@ -270,6 +276,7 @@ struct iOSLandscapePrayerWheelView: View {
     @Previewable @State var showSettings = false
     return iOSLandscapePrayerWheelView(
         prayerLibrary: PrayerLibrary(),
+        settings: AppSettings(),
         showSettings: $showSettings
     )
 }
