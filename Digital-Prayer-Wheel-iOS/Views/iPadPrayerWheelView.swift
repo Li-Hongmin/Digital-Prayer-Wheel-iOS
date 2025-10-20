@@ -137,7 +137,7 @@ struct iPadPrayerWheelView: View {
                         Text("总转数")
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(Color.white.opacity(0.7))
-                        Text("\\(prayerLibrary.totalCycles)")
+                        Text("\(prayerLibrary.totalCycles)")
                             .font(.system(size: 32, weight: .bold, design: .monospaced))
                             .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                     }
