@@ -73,7 +73,7 @@ struct DedicationVerseView: View {
                 HStack(spacing: scale.size(8)) {
                     ForEach(0..<min(2, currentVerse.count), id: \.self) { index in
                         Text(currentVerse[index])
-                            .font(.system(size: scale.fontSize(11), weight: .regular))
+                            .font(.system(size: scale.fontSize(13), weight: .regular))
                             .foregroundColor(.white)
                     }
                 }
@@ -83,7 +83,7 @@ struct DedicationVerseView: View {
                     HStack(spacing: scale.size(8)) {
                         ForEach(2..<currentVerse.count, id: \.self) { index in
                             Text(currentVerse[index])
-                                .font(.system(size: scale.fontSize(11), weight: .regular))
+                                .font(.system(size: scale.fontSize(13), weight: .regular))
                                 .foregroundColor(.white)
                         }
                     }
