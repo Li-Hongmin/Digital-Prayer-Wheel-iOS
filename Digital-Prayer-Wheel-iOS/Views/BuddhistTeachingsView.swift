@@ -36,14 +36,11 @@ struct BuddhistTeachingsView: View {
             title: "净业正因",
             icon: "heart.circle.fill",
             content: [
-                "孝养父母，奉事师长；",
-                "慈心不杀，修十善业。",
+                "孝养父母，奉事师长；慈心不杀，修十善业。",
                 "",
-                "受持三归，具足众戒，",
-                "不犯威仪。",
+                "受持三归，具足众戒，不犯威仪。",
                 "",
-                "发菩提心，深信因果；",
-                "读诵大乘，劝进行者。"
+                "发菩提心，深信因果；读诵大乘，劝进行者。"
             ]
         )
     ]
@@ -124,33 +121,21 @@ struct BuddhistTeachingsView: View {
                                     }
                                 }
                             } else {
-                                // 净业正因 - 带金色序号，分段显示
-                                VStack(alignment: .leading, spacing: scale.size(10)) {
-                                    var currentSection = 0
+                                // 净业正因 - 带金色序号，竖屏一行显示
+                                VStack(alignment: .leading, spacing: scale.size(6)) {
                                     ForEach(Array(teaching.content.enumerated()), id: \.offset) { index, line in
                                         if line.isEmpty {
-                                            // 空行用于分隔下一个福业
-                                            if index < teaching.content.count - 1 {
-                                                Divider()
-                                                    .background(Color.white.opacity(0.1))
-                                            }
+                                            // 空行用于分隔
+                                            Divider()
+                                                .background(Color.white.opacity(0.1))
+                                                .padding(.vertical, scale.size(2))
                                         } else {
-                                            // 每两行为一组（一个福业）
-                                            if index == 0 || teaching.content[index - 1].isEmpty {
-                                                let _ = { currentSection += 1 }()
-                                            }
-
+                                            // 计算序号（跳过空行）
+                                            let contentIndex = teaching.content.prefix(index).filter { !$0.isEmpty }.count + 1
                                             HStack(alignment: .top, spacing: scale.size(4)) {
-                                                if index == 0 || teaching.content[index - 1].isEmpty {
-                                                    Text("\(currentSection)")
-                                                        .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
-                                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                                } else {
-                                                    Text("")
-                                                        .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
-                                                        .frame(width: scale.size(15))
-                                                }
-
+                                                Text("\(contentIndex)")
+                                                    .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
+                                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                                 Text(line)
                                                     .font(.system(size: scale.fontSize(13), weight: .medium))
                                                     .foregroundColor(.white)
