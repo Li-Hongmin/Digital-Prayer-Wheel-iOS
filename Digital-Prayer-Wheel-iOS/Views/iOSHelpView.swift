@@ -152,6 +152,45 @@ struct iOSHelpView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
 
+                        // 佛学教导
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "book.pages.fill")
+                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                    .frame(width: 24)
+                                Text("佛学教导")
+                                    .font(.system(size: 14, weight: .semibold))
+                            }
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("普贤十大愿")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(.primary)
+
+                                Text("普贤菩萨的十大行愿，是修行成佛的根本法门。包括礼敬诸佛、称赞如来、广修供养等十项殊胜大愿。")
+                                    .font(.system(size: 11, weight: .regular))
+                                    .foregroundColor(.secondary)
+
+                                Text("净业正因")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(.primary)
+                                    .padding(.top, 4)
+
+                                Text("出自《观无量寿佛经》，是往生净土的三种正因。包括孝养父母奉事师长、受持三归具足众戒、发菩提心深信因果三大福业。")
+                                    .font(.system(size: 11, weight: .regular))
+                                    .foregroundColor(.secondary)
+
+                                Text("点击界面下方的可折叠卡片即可查看完整内容。")
+                                    .font(.system(size: 11, weight: .regular))
+                                    .foregroundColor(.secondary)
+                                    .padding(.top, 4)
+                            }
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 12)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+
                         // 速度调整
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 8) {
