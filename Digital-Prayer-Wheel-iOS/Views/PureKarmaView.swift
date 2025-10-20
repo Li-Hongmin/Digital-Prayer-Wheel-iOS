@@ -57,7 +57,7 @@ struct PureKarmaView: View {
                                 .padding(.vertical, 2)
                         } else {
                             Text(line)
-                                .font(.system(size: 13, weight: .regular))
+                                .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(.white)
                                 .lineLimit(nil)
                         }
