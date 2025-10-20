@@ -34,10 +34,10 @@ struct SamanthabhadraVowsTwoColumnView: View {
             HStack(spacing: scale.size(8)) {
                 Image(systemName: "book.circle.fill")
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .font(.system(size: scale.fontSize(12)))
+                    .font(.system(size: scale.fontSize(16)))
 
                 Text("普贤十大愿")
-                    .font(.system(size: scale.fontSize(12), weight: .semibold))
+                    .font(.system(size: scale.fontSize(16), weight: .semibold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
                 Spacer()

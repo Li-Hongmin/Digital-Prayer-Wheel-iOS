@@ -29,10 +29,10 @@ struct PureKarmaView: View {
             HStack(spacing: scale.size(8)) {
                 Image(systemName: "heart.circle.fill")
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .font(.system(size: scale.fontSize(12)))
+                    .font(.system(size: scale.fontSize(16)))
 
                 Text("净业正因")
-                    .font(.system(size: scale.fontSize(11), weight: .semibold))
+                    .font(.system(size: scale.fontSize(16), weight: .semibold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
                 Spacer()
