@@ -14,9 +14,9 @@ struct PureKarmaView: View {
     @Environment(\.responsiveScale) var responsiveScale
 
     let content = [
-        ["孝养父母，奉事师长", "慈心不杀，修十善业"],
-        ["受持三归，具足众戒", "不犯威仪"],
-        ["发菩提心，深信因果", "读诵大乘，劝进行者"]
+        ["孝养父母，奉事师长；", "慈心不杀，修十善业。"],
+        ["受持三归，具足众戒，", "不犯威仪。"],
+        ["发菩提心，深信因果；", "读诵大乘，劝进行者。"]
     ]
 
     var body: some View {
