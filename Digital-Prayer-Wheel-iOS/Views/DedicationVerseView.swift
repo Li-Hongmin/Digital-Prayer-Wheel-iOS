@@ -46,7 +46,7 @@ struct DedicationVerseView: View {
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                     .font(.system(size: scale.fontSize(12)))
 
-                Text("回向偈（\(settings.selectedDedicationVerse)）")
+                Text("回向偈")
                     .font(.system(size: scale.fontSize(12), weight: .semibold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
@@ -56,14 +56,26 @@ struct DedicationVerseView: View {
             .padding(.vertical, scale.size(8))
             .background(Color(red: 0.18, green: 0.18, blue: 0.20))
 
-            // 回向偈内容
-            VStack(alignment: .center, spacing: scale.size(4)) {
-                ForEach(currentVerse, id: \.self) { line in
-                    Text(line)
-                        .font(.system(size: scale.fontSize(11), weight: .regular))
-                        .foregroundColor(.white)
-                        .lineLimit(nil)
-                        .multilineTextAlignment(.center)
+            // 回向偈内容 - 两行显示
+            VStack(alignment: .center, spacing: scale.size(3)) {
+                // 第一行
+                HStack(spacing: scale.size(8)) {
+                    ForEach(0..<min(2, currentVerse.count), id: \.self) { index in
+                        Text(currentVerse[index])
+                            .font(.system(size: scale.fontSize(11), weight: .regular))
+                            .foregroundColor(.white)
+                    }
+                }
+
+                // 第二行
+                if currentVerse.count > 2 {
+                    HStack(spacing: scale.size(8)) {
+                        ForEach(2..<currentVerse.count, id: \.self) { index in
+                            Text(currentVerse[index])
+                                .font(.system(size: scale.fontSize(11), weight: .regular))
+                                .foregroundColor(.white)
+                        }
+                    }
                 }
             }
             .padding(.horizontal, scale.size(12))
