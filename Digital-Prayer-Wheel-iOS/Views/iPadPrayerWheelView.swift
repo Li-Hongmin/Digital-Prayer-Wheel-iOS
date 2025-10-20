@@ -196,7 +196,7 @@ struct iPadPrayerWheelView: View {
 
                     Spacer()
                 }
-                .frame(maxWidth: 200)
+                .frame(maxWidth: 220)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)

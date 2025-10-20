@@ -60,19 +60,19 @@ struct iOSLandscapePrayerWheelView: View {
             .padding(.vertical, 12)
             .background(Color(red: 0.15, green: 0.15, blue: 0.18))
 
-            // 主内容区：左侧十大愿和净业 + 中间转经筒 + 右侧计数
-            HStack(spacing: 16) {
-                // 左侧：佛学教导（十大愿 + 净业正因）
+            // 主内容区：左侧十大愿 + 中间转经筒和计数 + 右侧净业正因
+            HStack(spacing: 12) {
+                // 左侧：普贤十大愿
                 VStack {
-                    BuddhistTeachingsView()
-                        .frame(maxWidth: 180)
+                    SamanthabhadraVowsView()
+                        .frame(maxWidth: 120)
 
                     Spacer()
                 }
-                .frame(maxWidth: 200)
+                .frame(maxWidth: 140)
 
-                // 中间：经文名和转经筒
-                VStack(spacing: 6) {
+                // 中间：转经筒和计数
+                VStack(spacing: 8) {
                     // 转经筒主体
                     ZStack {
                         Circle()
@@ -85,9 +85,9 @@ struct iOSLandscapePrayerWheelView: View {
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ),
-                                lineWidth: 2
+                                lineWidth: 3
                             )
-                            .frame(width: 120, height: 120)
+                            .frame(width: 160, height: 160)
 
                         Circle()
                             .fill(
@@ -100,25 +100,25 @@ struct iOSLandscapePrayerWheelView: View {
                                     endPoint: .bottomTrailing
                                 )
                             )
-                            .frame(width: 112, height: 112)
+                            .frame(width: 150, height: 150)
 
                         Circle()
                             .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: 2)
-                            .frame(width: 104, height: 104)
+                            .frame(width: 140, height: 140)
 
                         Circle()
                             .fill(Color(red: 0.99, green: 0.84, blue: 0.15))
-                            .frame(width: 5, height: 5)
+                            .frame(width: 6, height: 6)
 
                         Text("卍")
-                            .font(.system(size: 70, weight: .bold))
+                            .font(.system(size: 100, weight: .bold))
                             .foregroundColor(.white)
                             .rotation3DEffect(
                                 .degrees(rotation),
                                 axis: (x: 0, y: 0, z: 1)
                             )
                     }
-                    .frame(width: 120, height: 120)
+                    .frame(height: 180)
                     .scaleEffect(wheelTapScale)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.15)) {
@@ -136,59 +136,64 @@ struct iOSLandscapePrayerWheelView: View {
                         }
                     }
 
-                    Spacer()
-                }
-                .frame(maxWidth: 160)
+                    // 计数显示
+                    VStack(spacing: 12) {
+                        let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
 
-                // 右侧：计数显示
-                VStack(spacing: 12) {
-                    let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
-
-                    // 总转数
-                    VStack(alignment: .center, spacing: 4) {
-                        Text("总转数")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundColor(Color.white.opacity(0.7))
-                        Text("\(prayerLibrary.totalCycles)")
-                            .font(.system(size: 20, weight: .bold, design: .monospaced))
-                            .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    // 本次转经数
-                    VStack(alignment: .center, spacing: 4) {
-                        Text("本次转经数")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundColor(Color.white.opacity(0.7))
-
-                        HStack(spacing: 2) {
-                            Text(numberStr)
-                                .font(.system(size: 18, weight: .bold, design: .monospaced))
+                        // 总转数
+                        VStack(alignment: .center, spacing: 4) {
+                            Text("总转数")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color.white.opacity(0.7))
+                            Text("\(prayerLibrary.totalCycles)")
+                                .font(.system(size: 24, weight: .bold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                .lineLimit(1)
+                        }
+                        .frame(maxWidth: .infinity)
 
-                            VStack(spacing: 0) {
-                                Text(unitStr)
-                                    .font(.system(size: 11, weight: .bold))
+                        // 本次转经数
+                        VStack(alignment: .center, spacing: 4) {
+                            Text("本次转经数")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color.white.opacity(0.7))
+
+                            HStack(spacing: 0) {
+                                Text(numberStr)
+                                    .font(.system(size: 28, weight: .bold, design: .monospaced))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                     .lineLimit(1)
-                                    .truncationMode(.tail)
+                                    .scaleEffect(countScale)
 
-                                Text("次")
-                                    .font(.system(size: 9, weight: .semibold))
-                                    .foregroundColor(Color.white.opacity(0.7))
+                                VStack(spacing: 0) {
+                                    Text(unitStr)
+                                        .font(.system(size: 14, weight: .bold))
+                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+
+                                    Text("次")
+                                        .font(.system(size: 10, weight: .semibold))
+                                        .foregroundColor(Color.white.opacity(0.7))
+                                }
+                                .frame(minWidth: 70, alignment: .center)
                             }
                         }
+                        .frame(maxWidth: .infinity)
                     }
-                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
 
                     Spacer()
                 }
-                .frame(maxWidth: 120)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 12)
+
+                // 右侧：净业正因
+                VStack {
+                    PureKarmaView()
+                        .frame(maxWidth: 120)
+
+                    Spacer()
+                }
+                .frame(maxWidth: 140)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
