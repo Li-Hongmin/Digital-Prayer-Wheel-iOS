@@ -129,12 +129,12 @@ struct iOSPrayerWheelView: View {
                     }
                 }
 
-                // 计数显示 - 纵向布局
-                VStack(spacing: scale.size(12)) {
-                    let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
+                // 计数显示 - 左右分布
+                let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
 
-                    // 总转数
-                    VStack(alignment: .center, spacing: scale.size(4)) {
+                HStack(spacing: scale.size(16)) {
+                    // 左侧：总转数（左对齐）
+                    VStack(alignment: .leading, spacing: scale.size(4)) {
                         Text("总转数")
                             .font(.system(size: scale.fontSize(12), weight: .semibold))
                             .foregroundColor(Color.white.opacity(0.7))
@@ -142,10 +142,10 @@ struct iOSPrayerWheelView: View {
                             .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
                             .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                     }
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                    // 本次转经数
-                    VStack(alignment: .center, spacing: scale.size(4)) {
+                    // 右侧：本次转经数（右对齐）
+                    VStack(alignment: .trailing, spacing: scale.size(4)) {
                         Text("本次转经数")
                             .font(.system(size: scale.fontSize(12), weight: .semibold))
                             .foregroundColor(Color.white.opacity(0.7))
@@ -171,7 +171,7 @@ struct iOSPrayerWheelView: View {
                             .frame(minWidth: scale.size(70), alignment: .center)
                         }
                     }
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .padding(.horizontal, scale.size(12))
                 .padding(.vertical, scale.size(12))
