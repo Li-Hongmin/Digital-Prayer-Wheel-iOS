@@ -50,22 +50,22 @@ struct iOSPrayerWheelView: View {
 
             Spacer()
 
-            // 主内容区：左侧十大愿 + 右侧转经筒和计数
-            HStack(spacing: 12) {
+            // 主内容区：左侧十大愿 + 中间转经筒 + 右侧计数
+            HStack(spacing: 10) {
                 // 左侧：普贤十大愿
                 VStack {
                     SamanthabhadraVowsView()
-                        .frame(maxWidth: 100)
+                        .frame(maxWidth: 110)
 
                     Spacer()
                 }
-                .frame(maxWidth: 120)
+                .frame(maxWidth: 130)
 
-                // 右侧：经文名、转经筒和计数
-                VStack(spacing: 8) {
-                    // 经文名 - 转经筒正上方
+                // 中间：经文名和转经筒
+                VStack(spacing: 6) {
+                    // 经文名
                     Text(prayerLibrary.selectedType.rawValue)
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                         .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: 12, x: 0, y: 0)
                         .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
@@ -73,8 +73,9 @@ struct iOSPrayerWheelView: View {
                             let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
                             glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
                         }
+                        .lineLimit(1)
 
-                    // 转经筒主体 - iOS 尺寸
+                    // 转经筒主体
                     ZStack {
                         Circle()
                             .stroke(
@@ -88,7 +89,7 @@ struct iOSPrayerWheelView: View {
                                 ),
                                 lineWidth: 3
                             )
-                            .frame(width: 160, height: 160)
+                            .frame(width: 140, height: 140)
 
                         Circle()
                             .fill(
@@ -101,25 +102,25 @@ struct iOSPrayerWheelView: View {
                                     endPoint: .bottomTrailing
                                 )
                             )
-                            .frame(width: 150, height: 150)
+                            .frame(width: 132, height: 132)
 
                         Circle()
                             .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: 2)
-                            .frame(width: 140, height: 140)
+                            .frame(width: 124, height: 124)
 
                         Circle()
                             .fill(Color(red: 0.99, green: 0.84, blue: 0.15))
                             .frame(width: 6, height: 6)
 
                         Text("卍")
-                            .font(.system(size: 100, weight: .bold))
+                            .font(.system(size: 80, weight: .bold))
                             .foregroundColor(.white)
                             .rotation3DEffect(
                                 .degrees(rotation),
                                 axis: (x: 0, y: 0, z: 1)
                             )
                     }
-                    .frame(height: 180)
+                    .frame(width: 140, height: 140)
                     .scaleEffect(wheelTapScale)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.15)) {
@@ -137,60 +138,64 @@ struct iOSPrayerWheelView: View {
                         }
                     }
 
-                    // 计数显示 - 纵向布局
-                    VStack(spacing: 12) {
-                        let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
+                    Spacer()
+                }
+                .frame(maxWidth: 150)
 
-                        // 总转数
-                        VStack(alignment: .center, spacing: 4) {
-                            Text("总转数")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(Color.white.opacity(0.7))
-                            Text("\(prayerLibrary.totalCycles)")
-                                .font(.system(size: 24, weight: .bold, design: .monospaced))
+                // 右侧：计数显示
+                VStack(spacing: 12) {
+                    let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
+
+                    // 总转数
+                    VStack(alignment: .center, spacing: 4) {
+                        Text("总转数")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(Color.white.opacity(0.7))
+                        Text("\(prayerLibrary.totalCycles)")
+                            .font(.system(size: 20, weight: .bold, design: .monospaced))
+                            .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .frame(maxWidth: .infinity)
+
+                    // 本次转经数
+                    VStack(alignment: .center, spacing: 4) {
+                        Text("本次转经数")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(Color.white.opacity(0.7))
+
+                        HStack(spacing: 2) {
+                            Text(numberStr)
+                                .font(.system(size: 22, weight: .bold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                        }
-                        .frame(maxWidth: .infinity)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.6)
+                                .scaleEffect(countScale)
 
-                        // 本次转经数
-                        VStack(alignment: .center, spacing: 4) {
-                            Text("本次转经数")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(Color.white.opacity(0.7))
-
-                            HStack(spacing: 0) {
-                                Text(numberStr)
-                                    .font(.system(size: 28, weight: .bold, design: .monospaced))
+                            VStack(spacing: 0) {
+                                Text(unitStr)
+                                    .font(.system(size: 12, weight: .bold))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                     .lineLimit(1)
-                                    .minimumScaleFactor(0.6)
-                                    .scaleEffect(countScale)
-                                    .frame(maxWidth: 60, alignment: .trailing)
+                                    .truncationMode(.tail)
 
-                                VStack(spacing: 0) {
-                                    Text(unitStr)
-                                        .font(.system(size: 14, weight: .bold))
-                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
-
-                                    Text("次")
-                                        .font(.system(size: 10, weight: .semibold))
-                                        .foregroundColor(Color.white.opacity(0.7))
-                                }
-                                .frame(minWidth: 70, alignment: .center)
+                                Text("次")
+                                    .font(.system(size: 9, weight: .semibold))
+                                    .foregroundColor(Color.white.opacity(0.7))
                             }
                         }
-                        .frame(maxWidth: .infinity)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
 
                     Spacer()
                 }
+                .frame(maxWidth: 100)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 12)
             }
             .padding(.horizontal, 8)
-            .padding(.vertical, 12)
+            .padding(.vertical, 8)
 
             Spacer()
         }
