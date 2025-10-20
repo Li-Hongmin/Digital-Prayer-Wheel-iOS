@@ -37,17 +37,31 @@ struct iOSLandscapePrayerWheelView: View {
         let scale = responsiveScale ?? ResponsiveScale()
 
         VStack(spacing: 0) {
-            // 顶部栏：只有帮助和设置按钮
-            HStack {
-                Spacer()
+            // 最顶部：功课名居中，按钮在右侧
+            ZStack {
+                // 经文名（居中层）
+                Text(prayerLibrary.selectedType.rawValue)
+                    .font(.system(size: scale.fontSize(22), weight: .bold))
+                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                    .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: scale.size(12), x: 0, y: 0)
+                    .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
+                        let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
+                        let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
+                        glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
+                    }
+                    .frame(maxWidth: .infinity)
 
-                Button(action: { showHelp.toggle() }) {
-                    Image(systemName: "questionmark.circle")
-                        .font(.system(size: scale.fontSize(16)))
-                }
-                Button(action: { showSettings.toggle() }) {
-                    Image(systemName: "gear")
-                        .font(.system(size: scale.fontSize(16)))
+                // 帮助和设置按钮（右上角层）
+                HStack {
+                    Spacer()
+                    Button(action: { showHelp.toggle() }) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.system(size: scale.fontSize(16)))
+                    }
+                    Button(action: { showSettings.toggle() }) {
+                        Image(systemName: "gear")
+                            .font(.system(size: scale.fontSize(16)))
+                    }
                 }
             }
             .padding(.horizontal, scale.size(16))
@@ -63,19 +77,8 @@ struct iOSLandscapePrayerWheelView: View {
                 }
                 .frame(maxWidth: scale.size(260))
 
-                // 中间：经文名、转经筒和计数
+                // 中间：转经筒和计数
                 VStack(spacing: scale.size(8)) {
-                    // 经文名 - 转经筒上方
-                    Text(prayerLibrary.selectedType.rawValue)
-                        .font(.system(size: scale.fontSize(20), weight: .bold))
-                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                        .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: scale.size(12), x: 0, y: 0)
-                        .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
-                            let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
-                            let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
-                            glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
-                        }
-                        .padding(.bottom, scale.size(4))
 
                     // 转经筒主体
                     ZStack {
@@ -140,12 +143,12 @@ struct iOSLandscapePrayerWheelView: View {
                         }
                     }
 
-                    // 计数显示
-                    VStack(spacing: scale.size(12)) {
-                        let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
+                    // 计数显示 - 左右分布
+                    let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
 
-                        // 总转数
-                        VStack(alignment: .center, spacing: scale.size(4)) {
+                    HStack(spacing: scale.size(16)) {
+                        // 左侧：总转数（左对齐）
+                        VStack(alignment: .leading, spacing: scale.size(4)) {
                             Text("总转数")
                                 .font(.system(size: scale.fontSize(12), weight: .semibold))
                                 .foregroundColor(Color.white.opacity(0.7))
@@ -153,10 +156,10 @@ struct iOSLandscapePrayerWheelView: View {
                                 .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                         }
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                        // 本次转经数
-                        VStack(alignment: .center, spacing: scale.size(4)) {
+                        // 右侧：本次转经数（右对齐）
+                        VStack(alignment: .trailing, spacing: scale.size(4)) {
                             Text("本次转经数")
                                 .font(.system(size: scale.fontSize(12), weight: .semibold))
                                 .foregroundColor(Color.white.opacity(0.7))
@@ -182,7 +185,7 @@ struct iOSLandscapePrayerWheelView: View {
                                 .frame(minWidth: scale.size(70), alignment: .center)
                             }
                         }
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                     .padding(.horizontal, scale.size(12))
                     .padding(.vertical, scale.size(12))
