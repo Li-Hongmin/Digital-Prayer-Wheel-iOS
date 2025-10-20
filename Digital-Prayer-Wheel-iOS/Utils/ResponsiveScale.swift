@@ -12,27 +12,30 @@ struct ResponsiveScale {
     let screenWidth: CGFloat
     let screenHeight: CGFloat
 
-    // 基准尺寸：iPhone 14 (393 x 852)
-    static let baseWidth: CGFloat = 393
-    static let baseHeight: CGFloat = 852
+    // 基准尺寸：iPhone 14
+    static let portraitBaseWidth: CGFloat = 393   // 竖屏宽度
+    static let landscapeBaseWidth: CGFloat = 852  // 横屏宽度（竖屏的高度）
 
     init(geometry: GeometryProxy) {
         self.screenWidth = geometry.size.width
         self.screenHeight = geometry.size.height
     }
 
-    // 默认初始化器（使用基准尺寸，缩放因子为1.0）
+    // 默认初始化器（使用竖屏基准尺寸，缩放因子为1.0）
     init() {
-        self.screenWidth = Self.baseWidth
-        self.screenHeight = Self.baseHeight
+        self.screenWidth = Self.portraitBaseWidth
+        self.screenHeight = Self.landscapeBaseWidth
     }
 
-    /// 计算缩放因子（基于较小的比例，避免元素超出屏幕）
+    /// 计算缩放因子（智能判断横竖屏，使用对应基准）
     var scaleFactor: CGFloat {
-        min(
-            screenWidth / Self.baseWidth,
-            screenHeight / Self.baseHeight
-        )
+        if screenWidth > screenHeight {
+            // 横屏：基于宽度，横屏基准是 852
+            return screenWidth / Self.landscapeBaseWidth
+        } else {
+            // 竖屏：基于宽度，竖屏基准是 393
+            return screenWidth / Self.portraitBaseWidth
+        }
     }
 
     /// 缩放尺寸（用于转经筒、间距等）
