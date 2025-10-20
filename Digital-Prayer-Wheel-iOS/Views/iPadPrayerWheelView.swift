@@ -133,8 +133,11 @@ struct iPadPrayerWheelView: View {
                     Spacer()
                 }
 
-                // 右侧：计数显示（纵向排列）
-                VStack(spacing: 20) {
+                // 右侧：计数显示和普贤十大愿（纵向排列）
+                VStack(spacing: 16) {
+                    // 普贤十大愿
+                    SamanthabhadraVowsView()
+
                     let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
 
                     // 总转数
@@ -189,7 +192,7 @@ struct iPadPrayerWheelView: View {
 
                     Spacer()
                 }
-                .frame(maxWidth: 200)
+                .frame(maxWidth: 240)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)

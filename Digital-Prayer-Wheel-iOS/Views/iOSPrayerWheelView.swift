@@ -48,6 +48,11 @@ struct iOSPrayerWheelView: View {
             .padding(.horizontal, 16)
             .padding(.top, 8)
 
+            // 普贤十大愿 - 顶部
+            SamanthabhadraVowsView()
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+
             Spacer()
 
             // 经文名 - 转经筒正上方
@@ -175,6 +180,11 @@ struct iOSPrayerWheelView: View {
             .padding(.vertical, 12)
 
             Spacer()
+
+            // 普贤十大愿 - 底部
+            SamanthabhadraVowsView()
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .onChange(of: prayerLibrary.countExponent) { _, _ in
