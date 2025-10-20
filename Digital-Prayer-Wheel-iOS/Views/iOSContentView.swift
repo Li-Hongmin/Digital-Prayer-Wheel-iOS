@@ -19,27 +19,28 @@ struct iOSContentView: View {
                     .ignoresSafeArea()
 
                 VStack {
-                    if UIDevice.current.userInterfaceIdiom == .pad {
-                        // iPad: Use landscape view
-                        iPadPrayerWheelView(
-                            prayerLibrary: prayerLibrary,
-                            showSettings: $showSettings
-                        )
-                    } else {
-                        // iPhone: Choose layout based on screen dimensions
-                        if geometry.size.width > geometry.size.height {
+                    // 根据屏幕宽高比选择布局（iPhone 和 iPad 通用）
+                    if geometry.size.width > geometry.size.height {
+                        // 横屏：三栏布局（左侧十大愿 + 中间转经筒 + 右侧净业正因）
+                        if UIDevice.current.userInterfaceIdiom == .pad {
+                            // iPad 横屏：使用专门的 iPad 布局
+                            iPadPrayerWheelView(
+                                prayerLibrary: prayerLibrary,
+                                showSettings: $showSettings
+                            )
+                        } else {
                             // iPhone 横屏：三栏布局
                             iOSLandscapePrayerWheelView(
                                 prayerLibrary: prayerLibrary,
                                 showSettings: $showSettings
                             )
-                        } else {
-                            // iPhone 竖屏：纵向布局
-                            iOSPrayerWheelView(
-                                prayerLibrary: prayerLibrary,
-                                showSettings: $showSettings
-                            )
                         }
+                    } else {
+                        // 竖屏：纵向布局（上方转经筒 + 下方教导内容）
+                        iOSPrayerWheelView(
+                            prayerLibrary: prayerLibrary,
+                            showSettings: $showSettings
+                        )
                     }
                 }
             }
