@@ -61,15 +61,14 @@ struct iOSLandscapePrayerWheelView: View {
             .background(Color(red: 0.15, green: 0.15, blue: 0.18))
 
             // 主内容区：左侧十大愿 + 中间转经筒和计数 + 右侧净业正因
-            HStack(spacing: 12) {
-                // 左侧：普贤十大愿
+            HStack(spacing: 16) {
+                // 左侧：普贤十大愿（两列显示）
                 VStack {
-                    SamanthabhadraVowsView()
-                        .frame(maxWidth: 120)
+                    SamanthabhadraVowsTwoColumnView()
 
                     Spacer()
                 }
-                .frame(maxWidth: 140)
+                .frame(maxWidth: 260)
 
                 // 中间：转经筒和计数
                 VStack(spacing: 8) {
@@ -189,11 +188,10 @@ struct iOSLandscapePrayerWheelView: View {
                 // 右侧：净业正因
                 VStack {
                     PureKarmaView()
-                        .frame(maxWidth: 120)
 
                     Spacer()
                 }
-                .frame(maxWidth: 140)
+                .frame(maxWidth: 240)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
