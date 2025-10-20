@@ -94,7 +94,7 @@ struct BuddhistTeachingsView: View {
                                     HStack(spacing: scale.size(12)) {
                                         ForEach(0..<5, id: \.self) { index in
                                             Text("\(index + 1). \(teaching.content[index])")
-                                                .font(.system(size: scale.fontSize(10), weight: .regular))
+                                                .font(.system(size: scale.fontSize(13), weight: .medium))
                                                 .foregroundColor(.white)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                         }
@@ -104,7 +104,7 @@ struct BuddhistTeachingsView: View {
                                     HStack(spacing: scale.size(12)) {
                                         ForEach(5..<10, id: \.self) { index in
                                             Text("\(index + 1). \(teaching.content[index])")
-                                                .font(.system(size: scale.fontSize(10), weight: .regular))
+                                                .font(.system(size: scale.fontSize(13), weight: .medium))
                                                 .foregroundColor(.white)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                         }
@@ -121,7 +121,7 @@ struct BuddhistTeachingsView: View {
                                                 .padding(.vertical, scale.size(2))
                                         } else {
                                             Text(line)
-                                                .font(.system(size: scale.fontSize(11), weight: .regular))
+                                                .font(.system(size: scale.fontSize(13), weight: .medium))
                                                 .foregroundColor(.white)
                                                 .lineLimit(nil)
                                         }
