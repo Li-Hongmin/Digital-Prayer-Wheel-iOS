@@ -179,8 +179,8 @@ struct iOSPrayerWheelView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
 
-            // 普贤十大愿 - 下方
-            SamanthabhadraVowsView()
+            // 普贤十大愿 - 下方两列
+            SamanthabhadraVowsTwoColumnView()
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
         }
