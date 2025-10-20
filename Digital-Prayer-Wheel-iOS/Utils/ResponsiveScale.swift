@@ -40,16 +40,9 @@ struct ResponsiveScale {
         baseSize * scaleFactor
     }
 
-    /// 缩放字体（使用平方根避免过度缩放）
+    /// 缩放字体（纯线性等比例缩放，保持所有元素比例一致）
     func fontSize(_ baseSize: CGFloat) -> CGFloat {
-        baseSize * sqrt(scaleFactor).clamped(to: 0.8...1.2)
-    }
-}
-
-/// CGFloat 扩展：限制范围
-extension CGFloat {
-    func clamped(to range: ClosedRange<CGFloat>) -> CGFloat {
-        Swift.min(Swift.max(self, range.lowerBound), range.upperBound)
+        baseSize * scaleFactor
     }
 }
 
