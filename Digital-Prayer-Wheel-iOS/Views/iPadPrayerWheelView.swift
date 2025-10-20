@@ -172,9 +172,7 @@ struct iPadPrayerWheelView: View {
                                 .font(.system(size: 32, weight: .bold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                 .lineLimit(1)
-                                .minimumScaleFactor(0.6)
                                 .scaleEffect(countScale)
-                                .frame(maxWidth: 80, alignment: .trailing)
 
                             VStack(spacing: 0) {
                                 Text(unitStr)
