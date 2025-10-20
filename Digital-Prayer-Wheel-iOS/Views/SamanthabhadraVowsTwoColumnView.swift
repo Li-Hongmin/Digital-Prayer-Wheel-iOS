@@ -9,6 +9,9 @@ import SwiftUI
 
 /// 普贤十大愿两列展示视图（iPhone 下方）
 struct SamanthabhadraVowsTwoColumnView: View {
+    var initiallyExpanded: Bool = false
+    @State private var isExpanded: Bool = false
+
     let vows = [
         "礼敬诸佛",
         "称赞如来",
@@ -25,24 +28,44 @@ struct SamanthabhadraVowsTwoColumnView: View {
     var body: some View {
         VStack(spacing: 0) {
             // 标题
-            Text("普贤十大愿")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                .padding(.vertical, 8)
+            HStack(spacing: 8) {
+                Image(systemName: "book.circle.fill")
+                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                    .font(.system(size: 12))
+
+                Text("普贤十大愿")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+
+                Spacer()
+
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(Color.white.opacity(0.6))
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(Color(red: 0.18, green: 0.18, blue: 0.20))
+            .onTapGesture {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isExpanded.toggle()
+                }
+            }
 
             // 两列布局
-            HStack(spacing: 20) {
+            if isExpanded {
+                HStack(spacing: 20) {
                 // 左列 - 前 5 个
                 VStack(alignment: .leading, spacing: 8) {
                     ForEach(0..<5, id: \.self) { index in
                         HStack(spacing: 8) {
                             Text("\(index + 1)")
-                                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                                .font(.system(size: 13, weight: .semibold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                .frame(width: 16)
+                                .frame(width: 18)
 
                             Text(vows[index])
-                                .font(.system(size: 11, weight: .medium))
+                                .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(.white)
 
                             Spacer()
@@ -55,12 +78,12 @@ struct SamanthabhadraVowsTwoColumnView: View {
                     ForEach(5..<10, id: \.self) { index in
                         HStack(spacing: 8) {
                             Text("\(index + 1)")
-                                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                                .font(.system(size: 13, weight: .semibold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                .frame(width: 16)
+                                .frame(width: 18)
 
                             Text(vows[index])
-                                .font(.system(size: 11, weight: .medium))
+                                .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(.white)
 
                             Spacer()
@@ -70,9 +93,14 @@ struct SamanthabhadraVowsTwoColumnView: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
+            .background(Color(red: 0.15, green: 0.15, blue: 0.17))
         }
-        .background(Color(red: 0.15, green: 0.15, blue: 0.17))
+        }
+        .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .cornerRadius(8)
+        .onAppear {
+            isExpanded = initiallyExpanded
+        }
     }
 }
 

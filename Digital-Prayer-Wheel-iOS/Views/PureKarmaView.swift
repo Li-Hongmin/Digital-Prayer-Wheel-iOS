@@ -9,6 +9,7 @@ import SwiftUI
 
 /// 净业正因单独可折叠视图
 struct PureKarmaView: View {
+    var initiallyExpanded: Bool = false
     @State private var isExpanded: Bool = false
 
     let content = [
@@ -56,7 +57,7 @@ struct PureKarmaView: View {
                                 .padding(.vertical, 2)
                         } else {
                             Text(line)
-                                .font(.system(size: 11, weight: .regular))
+                                .font(.system(size: 13, weight: .regular))
                                 .foregroundColor(.white)
                                 .lineLimit(nil)
                         }
@@ -69,6 +70,9 @@ struct PureKarmaView: View {
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .cornerRadius(8)
+        .onAppear {
+            isExpanded = initiallyExpanded
+        }
     }
 }
 

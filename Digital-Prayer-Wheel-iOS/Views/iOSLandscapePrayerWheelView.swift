@@ -62,9 +62,9 @@ struct iOSLandscapePrayerWheelView: View {
 
             // 主内容区：左侧十大愿 + 中间转经筒和计数 + 右侧净业正因
             HStack(spacing: 16) {
-                // 左侧：普贤十大愿（两列显示）
+                // 左侧：普贤十大愿（两列显示，横屏自动展开）
                 VStack {
-                    SamanthabhadraVowsTwoColumnView()
+                    SamanthabhadraVowsTwoColumnView(initiallyExpanded: true)
 
                     Spacer()
                 }
@@ -185,9 +185,9 @@ struct iOSLandscapePrayerWheelView: View {
                     Spacer()
                 }
 
-                // 右侧：净业正因
+                // 右侧：净业正因（横屏自动展开）
                 VStack {
-                    PureKarmaView()
+                    PureKarmaView(initiallyExpanded: true)
 
                     Spacer()
                 }
