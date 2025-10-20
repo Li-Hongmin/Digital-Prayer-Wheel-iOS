@@ -33,18 +33,8 @@ struct iOSLandscapePrayerWheelView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // 顶部栏
+            // 顶部栏：只有帮助和设置按钮
             HStack {
-                Text(prayerLibrary.selectedType.rawValue)
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: 12, x: 0, y: 0)
-                    .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
-                        let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
-                        let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
-                        glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
-                    }
-
                 Spacer()
 
                 Button(action: { showHelp.toggle() }) {
@@ -57,8 +47,7 @@ struct iOSLandscapePrayerWheelView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color(red: 0.15, green: 0.15, blue: 0.18))
+            .padding(.top, 8)
 
             // 主内容区：左侧十大愿 + 中间转经筒和计数 + 右侧净业正因
             HStack(spacing: 16) {
@@ -70,8 +59,20 @@ struct iOSLandscapePrayerWheelView: View {
                 }
                 .frame(maxWidth: 260)
 
-                // 中间：转经筒和计数
+                // 中间：经文名、转经筒和计数
                 VStack(spacing: 8) {
+                    // 经文名 - 转经筒上方
+                    Text(prayerLibrary.selectedType.rawValue)
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                        .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: 12, x: 0, y: 0)
+                        .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
+                            let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
+                            let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
+                            glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
+                        }
+                        .padding(.bottom, 4)
+
                     // 转经筒主体
                     ZStack {
                         Circle()
