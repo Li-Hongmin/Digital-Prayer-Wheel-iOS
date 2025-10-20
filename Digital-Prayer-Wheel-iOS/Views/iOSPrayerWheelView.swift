@@ -50,18 +50,9 @@ struct iOSPrayerWheelView: View {
 
             Spacer()
 
-            // 主内容区：左侧十大愿 + 右侧转经筒和计数
-            HStack(spacing: 12) {
-                // 左侧：普贤十大愿
-                VStack {
-                    SamanthabhadraVowsView()
-                        .frame(maxWidth: 110)
-
-                    Spacer()
-                }
-                .frame(maxWidth: 130)
-
-                // 右侧：经文名、转经筒和计数（纵向排列）
+            // 主内容区：经文名、转经筒、计数和十大愿（两列布局）
+            HStack(spacing: 16) {
+                // 左侧：经文名、转经筒、计数
                 VStack(spacing: 8) {
                     // 经文名
                     Text(prayerLibrary.selectedType.rawValue)
@@ -185,6 +176,11 @@ struct iOSPrayerWheelView: View {
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 12)
+                }
+
+                // 右侧：普贤十大愿
+                VStack {
+                    SamanthabhadraVowsView()
 
                     Spacer()
                 }
