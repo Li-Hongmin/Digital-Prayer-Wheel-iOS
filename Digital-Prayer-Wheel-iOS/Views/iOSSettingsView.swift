@@ -215,12 +215,33 @@ struct iOSSettingsView: View {
                             ]
                             let currentVerse = verses[settings.selectedDedicationVerse] ?? verses[1]!
 
-                            VStack(alignment: .center, spacing: 4) {
-                                ForEach(currentVerse, id: \.self) { line in
-                                    Text(line)
-                                        .font(.system(size: 10, weight: .regular))
+                            VStack(alignment: .center, spacing: 3) {
+                                // 第一行（前两句）
+                                HStack(spacing: 6) {
+                                    Text(currentVerse[0])
+                                        .font(.system(size: 9, weight: .regular))
                                         .foregroundColor(.secondary)
-                                        .multilineTextAlignment(.center)
+                                    if currentVerse.count > 1 {
+                                        Text(currentVerse[1])
+                                            .font(.system(size: 9, weight: .regular))
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+
+                                // 第二行（后两句）
+                                if currentVerse.count > 2 {
+                                    HStack(spacing: 6) {
+                                        if currentVerse.count > 2 {
+                                            Text(currentVerse[2])
+                                                .font(.system(size: 9, weight: .regular))
+                                                .foregroundColor(.secondary)
+                                        }
+                                        if currentVerse.count > 3 {
+                                            Text(currentVerse[3])
+                                                .font(.system(size: 9, weight: .regular))
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
                                 }
                             }
                             .frame(maxWidth: .infinity)

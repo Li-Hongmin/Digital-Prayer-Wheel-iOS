@@ -11,6 +11,7 @@ import SwiftUI
 struct DedicationVerseView: View {
     @ObservedObject var settings: AppSettings
     @Environment(\.responsiveScale) var responsiveScale
+    @State private var isExpanded: Bool = true  // 默认展开
 
     let verses = [
         1: [
@@ -51,13 +52,23 @@ struct DedicationVerseView: View {
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
                 Spacer()
+
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                    .font(.system(size: scale.fontSize(10), weight: .semibold))
+                    .foregroundColor(Color.white.opacity(0.6))
             }
             .padding(.horizontal, scale.size(12))
             .padding(.vertical, scale.size(8))
             .background(Color(red: 0.18, green: 0.18, blue: 0.20))
+            .onTapGesture {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isExpanded.toggle()
+                }
+            }
 
             // 回向偈内容 - 两行显示
-            VStack(alignment: .center, spacing: scale.size(3)) {
+            if isExpanded {
+                VStack(alignment: .center, spacing: scale.size(3)) {
                 // 第一行
                 HStack(spacing: scale.size(8)) {
                     ForEach(0..<min(2, currentVerse.count), id: \.self) { index in
@@ -81,6 +92,7 @@ struct DedicationVerseView: View {
             .padding(.horizontal, scale.size(12))
             .padding(.vertical, scale.size(8))
             .background(Color(red: 0.15, green: 0.15, blue: 0.17))
+            }
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .cornerRadius(scale.size(8))
