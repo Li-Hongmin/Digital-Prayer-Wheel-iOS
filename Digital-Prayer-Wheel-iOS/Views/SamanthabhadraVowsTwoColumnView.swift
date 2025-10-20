@@ -57,7 +57,7 @@ struct SamanthabhadraVowsTwoColumnView: View {
 
             // 两列布局
             if isExpanded {
-                HStack(spacing: scale.size(20)) {
+                HStack(spacing: scale.size(10)) {
                 // 左列 - 前 5 个
                 VStack(alignment: .leading, spacing: scale.size(8)) {
                     ForEach(0..<5, id: \.self) { index in
