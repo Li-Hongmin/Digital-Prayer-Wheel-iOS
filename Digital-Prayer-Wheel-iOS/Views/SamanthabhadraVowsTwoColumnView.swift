@@ -63,12 +63,12 @@ struct SamanthabhadraVowsTwoColumnView: View {
                     ForEach(0..<5, id: \.self) { index in
                         HStack(spacing: scale.size(8)) {
                             Text("\(index + 1)")
-                                .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
+                                .font(.system(size: scale.fontSize(16), weight: .semibold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                .frame(width: scale.size(18))
+                                .frame(width: scale.size(20))
 
                             Text(vows[index])
-                                .font(.system(size: scale.fontSize(13), weight: .medium))
+                                .font(.system(size: scale.fontSize(16), weight: .medium))
                                 .foregroundColor(.white)
 
                             Spacer()
@@ -81,12 +81,12 @@ struct SamanthabhadraVowsTwoColumnView: View {
                     ForEach(5..<10, id: \.self) { index in
                         HStack(spacing: scale.size(8)) {
                             Text("\(index + 1)")
-                                .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
+                                .font(.system(size: scale.fontSize(16), weight: .semibold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                .frame(width: scale.size(18))
+                                .frame(width: scale.size(20))
 
                             Text(vows[index])
-                                .font(.system(size: scale.fontSize(13), weight: .medium))
+                                .font(.system(size: scale.fontSize(16), weight: .medium))
                                 .foregroundColor(.white)
 
                             Spacer()

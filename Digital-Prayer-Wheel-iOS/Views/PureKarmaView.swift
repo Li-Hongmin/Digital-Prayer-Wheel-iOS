@@ -61,12 +61,12 @@ struct PureKarmaView: View {
                         } else {
                             // 计算序号（跳过空行）
                             let contentIndex = content.prefix(index).filter { !$0.isEmpty }.count + 1
-                            HStack(alignment: .top, spacing: scale.size(4)) {
+                            HStack(alignment: .top, spacing: scale.size(8)) {
                                 Text("\(contentIndex)")
-                                    .font(.system(size: scale.fontSize(13), weight: .semibold, design: .monospaced))
+                                    .font(.system(size: scale.fontSize(16), weight: .semibold, design: .monospaced))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                 Text(line)
-                                    .font(.system(size: scale.fontSize(13), weight: .medium))
+                                    .font(.system(size: scale.fontSize(16), weight: .medium))
                                     .foregroundColor(.white)
                                     .lineLimit(nil)
                             }
