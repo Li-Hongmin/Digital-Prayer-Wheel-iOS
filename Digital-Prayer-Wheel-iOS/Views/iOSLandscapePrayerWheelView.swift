@@ -16,9 +16,13 @@ struct iOSLandscapePrayerWheelView: View {
     @Environment(\.responsiveScale) var responsiveScale
 
     @StateObject var tabletLibrary = TabletLibrary()
+    @StateObject var videoRecorder = VideoRecorder.shared
     @State private var showHelp: Bool = false
     @State private var showLeftTablet: Bool = false
     @State private var showRightTablet: Bool = false
+    @State private var showShareSheet: Bool = false
+    @State private var showCalendar: Bool = false
+    @State private var videoURL: URL?
     @State private var rotation: Double = 0
     @State private var rotationTimer: Timer?
     @State private var isRotating: Bool = false
@@ -61,6 +65,13 @@ struct iOSLandscapePrayerWheelView: View {
                         Image(systemName: "questionmark.circle")
                             .font(.system(size: scale.fontSize(16)))
                     }
+                    // TODO: 分享功能暂时隐藏，待完善后启用
+                    // Button(action: { startVideoRecording() }) {
+                    //     Image(systemName: videoRecorder.isRecording ? "record.circle.fill" : "video.circle")
+                    //         .font(.system(size: scale.fontSize(16)))
+                    //         .foregroundColor(videoRecorder.isRecording ? .red : Color(red: 0.99, green: 0.84, blue: 0.15))
+                    // }
+                    // .disabled(videoRecorder.isRecording)
                     Button(action: { showSettings.toggle() }) {
                         Image(systemName: "gear")
                             .font(.system(size: scale.fontSize(16)))
@@ -178,16 +189,27 @@ struct iOSLandscapePrayerWheelView: View {
                     let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
 
                     HStack(spacing: scale.size(16)) {
-                        // 左侧：总转数（左对齐）
+                        // 左侧：今日总转数（左对齐，可点击查看日历）
                         VStack(alignment: .leading, spacing: scale.size(4)) {
-                            Text("总转数")
-                                .font(.system(size: scale.fontSize(12), weight: .semibold))
-                                .foregroundColor(Color.white.opacity(0.7))
-                            Text("\(prayerLibrary.totalCycles)")
+                            HStack(spacing: scale.size(4)) {
+                                Text("今日总转数")
+                                    .font(.system(size: scale.fontSize(12), weight: .semibold))
+                                    .foregroundColor(Color.white.opacity(0.7))
+                                Image(systemName: "calendar")
+                                    .font(.system(size: scale.fontSize(10)))
+                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.6))
+                            }
+                            Text("\(prayerLibrary.todayCycles)")
                                 .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showCalendar = true
+                            }
+                        }
 
                         // 右侧：指数级转经数（右对齐）
                         VStack(alignment: .trailing, spacing: scale.size(4)) {
@@ -244,6 +266,7 @@ struct iOSLandscapePrayerWheelView: View {
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .overlay(
             Group {
+                // 牌位覆盖层（录制时不显示进度UI，保持画面干净）
                 if showLeftTablet || showRightTablet {
                     Color.black.opacity(0.3)
                         .ignoresSafeArea()
@@ -260,6 +283,25 @@ struct iOSLandscapePrayerWheelView: View {
                         category: showLeftTablet ? "吉祥牌位" : "往生牌位"
                     )
                     .frame(maxWidth: scale.size(360), maxHeight: scale.size(500))
+                    .transition(.scale(scale: 0.8).combined(with: .opacity))
+                }
+
+                // 日历统计覆盖层
+                if showCalendar {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showCalendar = false
+                            }
+                        }
+
+                    CalendarStatsView(
+                        statistics: prayerLibrary.statistics,
+                        prayerLibrary: prayerLibrary,
+                        isPresented: $showCalendar
+                    )
+                    .frame(maxWidth: scale.size(450), maxHeight: scale.size(650))
                     .transition(.scale(scale: 0.8).combined(with: .opacity))
                 }
             }
@@ -304,6 +346,48 @@ struct iOSLandscapePrayerWheelView: View {
                 settings: settings,  // 使用传入的共享实例，避免重复创建
                 prayerLibrary: prayerLibrary
             )
+        }
+        .sheet(isPresented: $showShareSheet) {
+            if let url = videoURL {
+                ActivityViewController(items: [url])
+            }
+        }
+        .alert("录制失败", isPresented: .constant(videoRecorder.recordingError != nil)) {
+            Button("确定") {
+                videoRecorder.recordingError = nil
+            }
+        } message: {
+            Text(videoRecorder.recordingError ?? "")
+        }
+    }
+
+    // MARK: - 视频录制和分享功能
+
+    private func startVideoRecording() {
+        // 确保转经筒正在转动
+        if !isRotating {
+            startRotation()
+        }
+
+        // 震动反馈：开始录制
+        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+        impactFeedback.impactOccurred()
+
+        // 开始录制5秒视频
+        videoRecorder.startRecording { url in
+            guard let url = url else {
+                return
+            }
+
+            // 震动反馈：录制完成
+            let successFeedback = UINotificationFeedbackGenerator()
+            successFeedback.notificationOccurred(.success)
+
+            // 录制成功，保存URL并打开分享表
+            Task { @MainActor in
+                videoURL = url
+                showShareSheet = true
+            }
         }
     }
 

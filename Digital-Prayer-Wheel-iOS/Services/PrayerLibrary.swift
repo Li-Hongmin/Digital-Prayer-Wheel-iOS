@@ -11,21 +11,29 @@ import Combine
 
 @MainActor
 class PrayerLibrary: ObservableObject {
+    // 统计管理器
+    @Published var statistics = PrayerStatistics()
+
     // 当前选择的经文类型
     @Published var selectedType: PrayerType = .amitabha {
         didSet {
             loadTextsForCurrentType()
             loadCount()
+            checkDailyReset() // 切换经文时也检查是否需要重置
         }
     }
 
-    // 当前计数的指数（存储形式：2^countExponent）
-    // 这样只需存储一个整数，节省空间，精度无损
-    @Published var countExponent: Int = 0
+    // 今日计数的指数（每日独立，午夜自动重置）
+    @Published var todayCountExponent: Int = 0
 
-    // 总体转经数（总共转过多少次）
-    // 每调用一次 incrementCount() 就 +1
-    // 用于追踪用户长期的总转经数
+    // 今日总循环数（今日转经次数）
+    @Published var todayCycles: Int = 0
+
+    // 上次重置日期（用于跨日检测）
+    private var lastResetDate: Date?
+
+    // 历史总计数（仅用于兼容旧版本，不再主要使用）
+    @Published var countExponent: Int = 0
     @Published var totalCycles: Int = 0
 
     // 当前计数的缓存值（避免重复计算）
@@ -113,20 +121,30 @@ class PrayerLibrary: ObservableObject {
     }
 
     /// 增加计数 - 使用复利方式（每次增加一倍 = 指数+1）
-    /// 这是一种指数增长方式，创造"加速度"的修行体验
+    /// 新增：每日独立计数，午夜自动重置
     /// 2^0 → 2^1 → 2^2 → 2^3 → 2^4 ...
     /// 存储形式：只存储指数，节省空间
-    /// 每次调用都增加总转数 totalCycles
+    /// 每次调用都增加总转数 totalCycles 和今日转数 todayCycles
     /// 上限：当 2^n 超过 1000×10^68 时自动重置为 0
     /// 性能优化：定时保存，每10分钟自动保存一次，减少磁盘I/O
     func incrementCount() {
+        // 检查是否需要每日重置
+        checkDailyReset()
+
+        // 增加历史总计数
         countExponent += 1
-        totalCycles += 1  // 每转一次都增加总转数
+        totalCycles += 1
+
+        // 增加今日计数
+        todayCountExponent += 1
+        todayCycles += 1
 
         // 检查是否超过上限（2^236 ≈ 1.2×10^71，超过 1000×10^68）
-        // 当达到上限时，重置 countExponent 为 0 重新开始，但 totalCycles 继续累加
         if countExponent > 235 {
             countExponent = 0
+        }
+        if todayCountExponent > 235 {
+            todayCountExponent = 0
         }
 
         cachedCount = nil  // 清除缓存，强制重新计算
@@ -138,6 +156,28 @@ class PrayerLibrary: ObservableObject {
             saveCount()
             lastSaveTime = currentTime
             hasUnsavedChanges = false
+        }
+
+        // 更新今日统计记录
+        statistics.updateTodayCount(
+            for: selectedType.rawValue,
+            countExponent: todayCountExponent,
+            totalCycles: todayCycles
+        )
+    }
+
+    /// 检查是否需要每日重置
+    private func checkDailyReset() {
+        let today = Calendar.current.startOfDay(for: Date())
+
+        // 如果还没有记录重置日期，或者已经过了一天
+        if lastResetDate == nil || lastResetDate! < today {
+            print("🌅 新的一天，重置今日计数")
+            // 重置今日计数
+            todayCountExponent = 0
+            todayCycles = 0
+            lastResetDate = today
+            saveDailyResetDate()
         }
     }
 
@@ -179,9 +219,21 @@ class PrayerLibrary: ObservableObject {
     private func loadCount() {
         let key = "PrayerCount_\(selectedType.rawValue)"
         let totalCyclesKey = "TotalCycles_\(selectedType.rawValue)"
+        let todayKey = "TodayCount_\(selectedType.rawValue)"
+        let todayCyclesKey = "TodayCycles_\(selectedType.rawValue)"
 
         // 加载总体循环数
         totalCycles = UserDefaults.standard.integer(forKey: totalCyclesKey)
+
+        // 加载每日重置日期
+        loadDailyResetDate()
+
+        // 检查是否需要重置（跨日检测）
+        checkDailyReset()
+
+        // 加载今日计数
+        todayCountExponent = UserDefaults.standard.integer(forKey: todayKey)
+        todayCycles = UserDefaults.standard.integer(forKey: todayCyclesKey)
 
         // 首先尝试读取新格式（整数指数）
         let exponent = UserDefaults.standard.integer(forKey: key)
@@ -232,13 +284,36 @@ class PrayerLibrary: ObservableObject {
     private func saveCount() {
         let key = "PrayerCount_\(selectedType.rawValue)"
         let totalCyclesKey = "TotalCycles_\(selectedType.rawValue)"
+        let todayKey = "TodayCount_\(selectedType.rawValue)"
+        let todayCyclesKey = "TodayCycles_\(selectedType.rawValue)"
 
-        // 仅保存到本地 UserDefaults（不同步到 iCloud）
+        // 保存到本地 UserDefaults（不同步到 iCloud）
         UserDefaults.standard.set(countExponent, forKey: key)
         UserDefaults.standard.set(totalCycles, forKey: totalCyclesKey)
 
+        // 保存今日计数
+        UserDefaults.standard.set(todayCountExponent, forKey: todayKey)
+        UserDefaults.standard.set(todayCycles, forKey: todayCyclesKey)
+
         // 更新保存时间（用于UI显示）
         lastCountSaveTime = Date()
+    }
+
+    /// 保存每日重置日期
+    private func saveDailyResetDate() {
+        let key = "LastResetDate_\(selectedType.rawValue)"
+        if let date = lastResetDate {
+            UserDefaults.standard.set(date.timeIntervalSince1970, forKey: key)
+        }
+    }
+
+    /// 加载每日重置日期
+    private func loadDailyResetDate() {
+        let key = "LastResetDate_\(selectedType.rawValue)"
+        let timestamp = UserDefaults.standard.double(forKey: key)
+        if timestamp > 0 {
+            lastResetDate = Date(timeIntervalSince1970: timestamp)
+        }
     }
 
     /// 加载转经速度

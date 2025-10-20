@@ -73,11 +73,31 @@ let baseDir = "/Users/lihongmin/Dev/Digital-Prayer-Wheel-iOS/Digital-Prayer-Whee
 
 // 需要生成的图标尺寸
 let iconSizes: [(size: CGSize, scale: CGFloat, filename: String)] = [
-    // iPhone
+    // iPhone Notification (20pt)
+    (CGSize(width: 20, height: 20), 2.0, "Icon-20@2x.png"),      // 40x40
+    (CGSize(width: 20, height: 20), 3.0, "Icon-20@3x.png"),      // 60x60
+    // iPhone Settings (29pt)
+    (CGSize(width: 29, height: 29), 2.0, "Icon-29@2x.png"),      // 58x58
+    (CGSize(width: 29, height: 29), 3.0, "Icon-29@3x.png"),      // 87x87
+    // iPhone Spotlight (40pt)
+    (CGSize(width: 40, height: 40), 2.0, "Icon-40@2x.png"),      // 80x80
+    (CGSize(width: 40, height: 40), 3.0, "Icon-40@3x.png"),      // 120x120
+    // iPhone App (60pt)
     (CGSize(width: 60, height: 60), 2.0, "Icon-60@2x.png"),      // 120x120
     (CGSize(width: 60, height: 60), 3.0, "Icon-60@3x.png"),      // 180x180
-    // iPad
+    // iPad Notifications (20pt)
+    (CGSize(width: 20, height: 20), 1.0, "Icon-20@1x.png"),      // 20x20
+    (CGSize(width: 20, height: 20), 2.0, "Icon-20@2x-ipad.png"), // 40x40
+    // iPad Settings (29pt)
+    (CGSize(width: 29, height: 29), 1.0, "Icon-29@1x.png"),      // 29x29
+    (CGSize(width: 29, height: 29), 2.0, "Icon-29@2x-ipad.png"), // 58x58
+    // iPad Spotlight (40pt)
+    (CGSize(width: 40, height: 40), 1.0, "Icon-40@1x.png"),      // 40x40
+    (CGSize(width: 40, height: 40), 2.0, "Icon-40@2x-ipad.png"), // 80x80
+    // iPad App (76pt)
+    (CGSize(width: 76, height: 76), 1.0, "Icon-76@1x.png"),      // 76x76
     (CGSize(width: 76, height: 76), 2.0, "Icon-76@2x.png"),      // 152x152
+    // iPad Pro (83.5pt)
     (CGSize(width: 83.5, height: 83.5), 2.0, "Icon-83.5@2x.png"), // 167x167
     // App Store
     (CGSize(width: 1024, height: 1024), 1.0, "Icon-1024.png")    // 1024x1024
