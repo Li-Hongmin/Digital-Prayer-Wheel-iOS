@@ -88,18 +88,46 @@ struct BuddhistTeachingsView: View {
 
                     // 内容区
                     if expandedSections.contains(teaching.id) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            ForEach(Array(teaching.content.enumerated()), id: \.offset) { index, line in
-                                if line.isEmpty {
-                                    // 空行用于分隔
-                                    Divider()
-                                        .background(Color.white.opacity(0.1))
-                                        .padding(.vertical, 2)
-                                } else {
-                                    Text(line)
-                                        .font(.system(size: 11, weight: .regular))
-                                        .foregroundColor(.white)
-                                        .lineLimit(nil)
+                        VStack(alignment: .leading, spacing: 8) {
+                            if teaching.id == "vows" {
+                                // 普贤十大愿 - 两行，每行5个
+                                VStack(alignment: .leading, spacing: 6) {
+                                    // 第一行 1-5
+                                    HStack(spacing: 12) {
+                                        ForEach(0..<5, id: \.self) { index in
+                                            Text("\(index + 1). \(teaching.content[index])")
+                                                .font(.system(size: 10, weight: .regular))
+                                                .foregroundColor(.white)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                    }
+
+                                    // 第二行 6-10
+                                    HStack(spacing: 12) {
+                                        ForEach(5..<10, id: \.self) { index in
+                                            Text("\(index + 1). \(teaching.content[index])")
+                                                .font(.system(size: 10, weight: .regular))
+                                                .foregroundColor(.white)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                    }
+                                }
+                            } else {
+                                // 往生正因 - 常规排列
+                                VStack(alignment: .leading, spacing: 6) {
+                                    ForEach(Array(teaching.content.enumerated()), id: \.offset) { index, line in
+                                        if line.isEmpty {
+                                            // 空行用于分隔
+                                            Divider()
+                                                .background(Color.white.opacity(0.1))
+                                                .padding(.vertical, 2)
+                                        } else {
+                                            Text(line)
+                                                .font(.system(size: 11, weight: .regular))
+                                                .foregroundColor(.white)
+                                                .lineLimit(nil)
+                                        }
+                                    }
                                 }
                             }
                         }
