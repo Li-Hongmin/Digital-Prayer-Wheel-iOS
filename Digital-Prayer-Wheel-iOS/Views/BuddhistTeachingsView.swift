@@ -9,6 +9,7 @@ import SwiftUI
 
 /// 佛学教导可折叠视图（往生正因、观无量寿佛经）
 struct BuddhistTeachingsView: View {
+    var initiallyExpanded: Bool = false
     @State private var expandedSections: Set<String> = []
     @Environment(\.responsiveScale) var responsiveScale
 
@@ -135,6 +136,11 @@ struct BuddhistTeachingsView: View {
                 }
                 .background(Color(red: 0.12, green: 0.12, blue: 0.14))
                 .cornerRadius(scale.size(8))
+            }
+        }
+        .onAppear {
+            if initiallyExpanded {
+                expandedSections = Set(teachings.map { $0.id })
             }
         }
     }

@@ -180,8 +180,8 @@ struct iOSPrayerWheelView: View {
             .padding(.horizontal, scale.size(16))
             .padding(.vertical, scale.size(8))
 
-            // 佛学教导 - 下方（普贤十大愿 + 往生正因）
-            BuddhistTeachingsView()
+            // 佛学教导 - 下方（普贤十大愿 + 往生正因，竖屏自动展开）
+            BuddhistTeachingsView(initiallyExpanded: true)
                 .padding(.horizontal, scale.size(16))
                 .padding(.vertical, scale.size(8))
         }
