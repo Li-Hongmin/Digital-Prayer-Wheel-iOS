@@ -66,6 +66,21 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // 防止息屏设置
+    @Published var keepScreenOn: Bool {
+        didSet {
+            saveSettings()
+            applyScreenSettings()
+        }
+    }
+
+    // 保持后台运行设置
+    @Published var keepBackgroundActive: Bool {
+        didSet {
+            saveSettings()
+        }
+    }
+
     init(
         selectedPrayerType: String = "南无阿弥陀佛",  // 默认经文
         barrageDisplayType: String = "fullscreen",  // 默认全屏弹幕
@@ -74,7 +89,9 @@ class AppSettings: ObservableObject {
         barrageFontSize: Double = 18.0,
         barrageOpacity: Double = 1.0,
         barrageIntervalSlider: Double = 70.0,  // 默认对应0.8秒左右
-        windowAlwaysOnTop: Bool = false
+        windowAlwaysOnTop: Bool = false,
+        keepScreenOn: Bool = true,  // 默认打开防止息屏
+        keepBackgroundActive: Bool = true  // 默认打开后台运行
     ) {
         // 从UserDefaults加载设置
         self.selectedPrayerType = UserDefaults.standard.string(forKey: "selectedPrayerType") ?? selectedPrayerType
@@ -85,6 +102,13 @@ class AppSettings: ObservableObject {
         self.barrageOpacity = UserDefaults.standard.double(forKey: "barrageOpacity") > 0 ? UserDefaults.standard.double(forKey: "barrageOpacity") : barrageOpacity
         self.barrageIntervalSlider = UserDefaults.standard.object(forKey: "barrageIntervalSlider") != nil ? UserDefaults.standard.double(forKey: "barrageIntervalSlider") : barrageIntervalSlider
         self.windowAlwaysOnTop = UserDefaults.standard.bool(forKey: "windowAlwaysOnTop")
+
+        // 加载防止息屏和后台运行设置，默认为 true
+        self.keepScreenOn = UserDefaults.standard.object(forKey: "keepScreenOn") != nil ? UserDefaults.standard.bool(forKey: "keepScreenOn") : keepScreenOn
+        self.keepBackgroundActive = UserDefaults.standard.object(forKey: "keepBackgroundActive") != nil ? UserDefaults.standard.bool(forKey: "keepBackgroundActive") : keepBackgroundActive
+
+        // 应用屏幕设置
+        applyScreenSettings()
     }
     
     // 保存设置到UserDefaults
@@ -97,6 +121,15 @@ class AppSettings: ObservableObject {
         UserDefaults.standard.set(barrageOpacity, forKey: "barrageOpacity")
         UserDefaults.standard.set(barrageIntervalSlider, forKey: "barrageIntervalSlider")
         UserDefaults.standard.set(windowAlwaysOnTop, forKey: "windowAlwaysOnTop")
+        UserDefaults.standard.set(keepScreenOn, forKey: "keepScreenOn")
+        UserDefaults.standard.set(keepBackgroundActive, forKey: "keepBackgroundActive")
+    }
+
+    // 应用屏幕设置
+    private func applyScreenSettings() {
+        #if os(iOS)
+        UIApplication.shared.isIdleTimerDisabled = keepScreenOn
+        #endif
     }
 
     // MARK: - 指数分布映射函数

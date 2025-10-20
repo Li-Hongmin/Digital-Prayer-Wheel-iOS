@@ -143,6 +143,55 @@ struct iOSSettingsView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
 
+                        // 应用行为设置
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("应用行为")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(.secondary)
+
+                            VStack(spacing: 12) {
+                                // 防止息屏
+                                Toggle(isOn: $settings.keepScreenOn) {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "sun.max.fill")
+                                            .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                            .frame(width: 20)
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text("防止息屏")
+                                                .font(.system(size: 13, weight: .semibold))
+                                            Text("转经时保持屏幕常亮")
+                                                .font(.system(size: 10, weight: .regular))
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                }
+                                .tint(Color(red: 0.99, green: 0.84, blue: 0.15))
+
+                                Divider()
+
+                                // 后台运行
+                                Toggle(isOn: $settings.keepBackgroundActive) {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "play.circle.fill")
+                                            .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                            .frame(width: 20)
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text("后台运行")
+                                                .font(.system(size: 13, weight: .semibold))
+                                            Text("切换到其他应用时继续转经")
+                                                .font(.system(size: 10, weight: .regular))
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                }
+                                .tint(Color(red: 0.99, green: 0.84, blue: 0.15))
+                            }
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 10)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+
                         Spacer()
                     }
                 }
