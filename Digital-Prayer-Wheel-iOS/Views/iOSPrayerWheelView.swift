@@ -177,8 +177,8 @@ struct iOSPrayerWheelView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
 
-            // 普贤十大愿 - 下方两列
-            SamanthabhadraVowsTwoColumnView()
+            // 佛学教导 - 下方（普贤十大愿 + 往生正因）
+            BuddhistTeachingsView()
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
         }
