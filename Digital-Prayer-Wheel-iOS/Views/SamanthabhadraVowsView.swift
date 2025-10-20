@@ -10,6 +10,7 @@ import SwiftUI
 /// 普贤十大愿展示视图
 struct SamanthabhadraVowsView: View {
     @State private var isExpanded: Bool = false
+    @Environment(\.responsiveScale) var responsiveScale
 
     let vows = [
         ("礼敬诸佛", "礼敬诸佛"),
@@ -25,25 +26,27 @@ struct SamanthabhadraVowsView: View {
     ]
 
     var body: some View {
+        let scale = responsiveScale ?? ResponsiveScale()
+
         VStack(spacing: 0) {
             // 标题行
-            HStack(spacing: 4) {
+            HStack(spacing: scale.size(4)) {
                 Image(systemName: "book.circle.fill")
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .font(.system(size: 12))
+                    .font(.system(size: scale.fontSize(12)))
 
                 Text("普贤十大愿")
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(.system(size: scale.fontSize(11), weight: .semibold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
                 Spacer()
 
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: scale.fontSize(10), weight: .semibold))
                     .foregroundColor(Color.white.opacity(0.6))
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.horizontal, scale.size(12))
+            .padding(.vertical, scale.size(8))
             .background(Color(red: 0.18, green: 0.18, blue: 0.20))
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
@@ -53,36 +56,36 @@ struct SamanthabhadraVowsView: View {
 
             // 内容区
             if isExpanded {
-                VStack(spacing: 6) {
+                VStack(spacing: scale.size(6)) {
                     ForEach(Array(vows.enumerated()), id: \.offset) { index, vow in
-                        HStack(spacing: 8) {
+                        HStack(spacing: scale.size(8)) {
                             Text("\(index + 1)")
-                                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                                .font(.system(size: scale.fontSize(10), weight: .semibold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                .frame(width: 16)
+                                .frame(width: scale.size(16))
 
                             Text(vow.0)
-                                .font(.system(size: 11, weight: .medium))
+                                .font(.system(size: scale.fontSize(11), weight: .medium))
                                 .foregroundColor(.white)
 
                             Spacer()
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, scale.size(12))
+                        .padding(.vertical, scale.size(4))
 
                         if index < vows.count - 1 {
                             Divider()
                                 .background(Color.white.opacity(0.1))
-                                .padding(.horizontal, 12)
+                                .padding(.horizontal, scale.size(12))
                         }
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, scale.size(8))
                 .background(Color(red: 0.15, green: 0.15, blue: 0.17))
             }
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
-        .cornerRadius(8)
+        .cornerRadius(scale.size(8))
     }
 }
 

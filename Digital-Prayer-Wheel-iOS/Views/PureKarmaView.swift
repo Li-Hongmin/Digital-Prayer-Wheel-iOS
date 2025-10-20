@@ -11,6 +11,7 @@ import SwiftUI
 struct PureKarmaView: View {
     var initiallyExpanded: Bool = false
     @State private var isExpanded: Bool = false
+    @Environment(\.responsiveScale) var responsiveScale
 
     let content = [
         "1. 孝养父母，奉事师长；慈心不杀，修十善业。",
@@ -21,25 +22,27 @@ struct PureKarmaView: View {
     ]
 
     var body: some View {
+        let scale = responsiveScale ?? ResponsiveScale()
+
         VStack(spacing: 0) {
             // 标题行
-            HStack(spacing: 8) {
+            HStack(spacing: scale.size(8)) {
                 Image(systemName: "heart.circle.fill")
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .font(.system(size: 12))
+                    .font(.system(size: scale.fontSize(12)))
 
                 Text("净业正因")
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(.system(size: scale.fontSize(11), weight: .semibold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
                 Spacer()
 
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: scale.fontSize(10), weight: .semibold))
                     .foregroundColor(Color.white.opacity(0.6))
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.horizontal, scale.size(12))
+            .padding(.vertical, scale.size(8))
             .background(Color(red: 0.18, green: 0.18, blue: 0.20))
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
@@ -49,27 +52,27 @@ struct PureKarmaView: View {
 
             // 内容区
             if isExpanded {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: scale.size(6)) {
                     ForEach(Array(content.enumerated()), id: \.offset) { index, line in
                         if line.isEmpty {
                             Divider()
                                 .background(Color.white.opacity(0.1))
-                                .padding(.vertical, 2)
+                                .padding(.vertical, scale.size(2))
                         } else {
                             Text(line)
-                                .font(.system(size: 13, weight: .medium))
+                                .font(.system(size: scale.fontSize(13), weight: .medium))
                                 .foregroundColor(.white)
                                 .lineLimit(nil)
                         }
                     }
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+                .padding(.horizontal, scale.size(12))
+                .padding(.vertical, scale.size(8))
                 .background(Color(red: 0.15, green: 0.15, blue: 0.17))
             }
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
-        .cornerRadius(8)
+        .cornerRadius(scale.size(8))
         .onAppear {
             isExpanded = initiallyExpanded
         }

@@ -14,6 +14,8 @@ struct iOSContentView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let scale = ResponsiveScale(geometry: geometry)
+
             ZStack {
                 Color(red: 0.12, green: 0.12, blue: 0.14)
                     .ignoresSafeArea()
@@ -34,6 +36,7 @@ struct iOSContentView: View {
                         )
                     }
                 }
+                .environment(\.responsiveScale, scale)
             }
             .sheet(isPresented: $showSettings) {
                 iOSSettingsView(
