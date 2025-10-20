@@ -13,6 +13,7 @@ struct iPadPrayerWheelView: View {
     @ObservedObject var prayerLibrary: PrayerLibrary
     @Binding var showSettings: Bool
 
+    @State private var showHelp: Bool = false
     @State private var rotation: Double = 0
     @State private var rotationTimer: Timer?
     @State private var isRotating: Bool = false
@@ -32,7 +33,7 @@ struct iPadPrayerWheelView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // 顶部栏：经文名字 + 设置
+            // 顶部栏：经文名字 + 帮助 + 设置
             HStack {
                 Text(prayerLibrary.selectedType.rawValue)
                     .font(.system(size: 28, weight: .bold))
@@ -46,6 +47,10 @@ struct iPadPrayerWheelView: View {
 
                 Spacer()
 
+                Button(action: { showHelp.toggle() }) {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 18))
+                }
                 Button(action: { showSettings.toggle() }) {
                     Image(systemName: "gear")
                         .font(.system(size: 18))
@@ -209,9 +214,19 @@ struct iPadPrayerWheelView: View {
         }
         .onAppear {
             localRotationSpeed = prayerLibrary.rotationSpeed
+            startRotation()
         }
         .onDisappear {
             stopRotation()
+        }
+        .sheet(isPresented: $showHelp) {
+            iOSHelpView()
+        }
+        .sheet(isPresented: $showSettings) {
+            iOSSettingsView(
+                settings: AppSettings(),
+                prayerLibrary: prayerLibrary
+            )
         }
     }
 

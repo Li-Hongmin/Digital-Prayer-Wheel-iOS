@@ -13,6 +13,7 @@ struct iOSPrayerWheelView: View {
     @ObservedObject var prayerLibrary: PrayerLibrary
     @Binding var showSettings: Bool
 
+    @State private var showHelp: Bool = false
     @State private var rotation: Double = 0
     @State private var rotationTimer: Timer?
     @State private var isRotating: Bool = false
@@ -31,28 +32,35 @@ struct iOSPrayerWheelView: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
-            // 顶部：经文名字 + 设置按钮
+        VStack(spacing: 8) {
+            // 顶部：帮助和设置按钮
             HStack {
-                Text(prayerLibrary.selectedType.rawValue)
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: 12, x: 0, y: 0)
-                    .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
-                        let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
-                        let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
-                        glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
-                    }
-
                 Spacer()
-
+                Button(action: { showHelp.toggle() }) {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 16))
+                }
                 Button(action: { showSettings.toggle() }) {
                     Image(systemName: "gear")
                         .font(.system(size: 16))
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.top, 12)
+            .padding(.top, 8)
+
+            Spacer()
+
+            // 经文名 - 转经筒正上方
+            Text(prayerLibrary.selectedType.rawValue)
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: 12, x: 0, y: 0)
+                .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
+                    let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
+                    let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
+                    glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
+                }
+                .padding(.bottom, 8)
 
             // 转经筒主体 - iOS 尺寸
             ZStack {
@@ -186,9 +194,19 @@ struct iOSPrayerWheelView: View {
         }
         .onAppear {
             localRotationSpeed = prayerLibrary.rotationSpeed
+            startRotation()
         }
         .onDisappear {
             stopRotation()
+        }
+        .sheet(isPresented: $showHelp) {
+            iOSHelpView()
+        }
+        .sheet(isPresented: $showSettings) {
+            iOSSettingsView(
+                settings: AppSettings(),
+                prayerLibrary: prayerLibrary
+            )
         }
     }
 
