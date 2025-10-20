@@ -37,8 +37,9 @@ struct iOSPrayerWheelView: View {
         let scale = responsiveScale ?? ResponsiveScale()
 
         VStack(spacing: scale.size(8)) {
-            // 最顶部：经文名和按钮在同一行
-            HStack {
+            // 最顶部：功课名居中，按钮在右侧
+            ZStack {
+                // 经文名（居中层）
                 Text(prayerLibrary.selectedType.rawValue)
                     .font(.system(size: scale.fontSize(22), weight: .bold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
@@ -48,16 +49,19 @@ struct iOSPrayerWheelView: View {
                         let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
                         glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
                     }
+                    .frame(maxWidth: .infinity)
 
-                Spacer()
-
-                Button(action: { showHelp.toggle() }) {
-                    Image(systemName: "questionmark.circle")
-                        .font(.system(size: scale.fontSize(16)))
-                }
-                Button(action: { showSettings.toggle() }) {
-                    Image(systemName: "gear")
-                        .font(.system(size: scale.fontSize(16)))
+                // 帮助和设置按钮（右上角层）
+                HStack {
+                    Spacer()
+                    Button(action: { showHelp.toggle() }) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.system(size: scale.fontSize(16)))
+                    }
+                    Button(action: { showSettings.toggle() }) {
+                        Image(systemName: "gear")
+                            .font(.system(size: scale.fontSize(16)))
+                    }
                 }
             }
             .padding(.horizontal, scale.size(16))
