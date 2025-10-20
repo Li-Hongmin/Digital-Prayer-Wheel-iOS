@@ -37,21 +37,20 @@ struct iOSPrayerWheelView: View {
         let scale = responsiveScale ?? ResponsiveScale()
 
         VStack(spacing: scale.size(8)) {
-            // 最顶部：经文名（主修功课）
-            Text(prayerLibrary.selectedType.rawValue)
-                .font(.system(size: scale.fontSize(22), weight: .bold))
-                .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: scale.size(12), x: 0, y: 0)
-                .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
-                    let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
-                    let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
-                    glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
-                }
-                .padding(.top, scale.size(8))
-
-            // 帮助和设置按钮
+            // 最顶部：经文名和按钮在同一行
             HStack {
+                Text(prayerLibrary.selectedType.rawValue)
+                    .font(.system(size: scale.fontSize(22), weight: .bold))
+                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                    .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: scale.size(12), x: 0, y: 0)
+                    .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
+                        let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
+                        let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
+                        glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
+                    }
+
                 Spacer()
+
                 Button(action: { showHelp.toggle() }) {
                     Image(systemName: "questionmark.circle")
                         .font(.system(size: scale.fontSize(16)))
@@ -62,6 +61,7 @@ struct iOSPrayerWheelView: View {
                 }
             }
             .padding(.horizontal, scale.size(16))
+            .padding(.top, scale.size(8))
 
             // 主内容区：转经筒和计数（纵向布局）
             VStack(spacing: scale.size(8)) {
