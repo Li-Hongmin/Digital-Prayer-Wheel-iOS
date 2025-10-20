@@ -11,65 +11,73 @@ import SwiftUI
 import Combine
 
 class AppSettings: ObservableObject {
+    // 去抖动保存机制（优化：延迟保存，避免频繁写入）
+    private var saveTimer: Timer?
+    private let saveDelay: TimeInterval = 0.5  // 0.5秒延迟
+
+    // 保存状态反馈
+    @Published var isSaving: Bool = false
+    @Published var lastSaveTime: Date?
+
     // 经文选择
     @Published var selectedPrayerType: String {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 弹幕显示类型（全屏/底端）
     @Published var barrageDisplayType: String {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 弹幕设置
     @Published var barrageSpeed: Double {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     @Published var barrageDirection: String {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 弹幕字体大小
     @Published var barrageFontSize: Double {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 弹幕透明度
     @Published var barrageOpacity: Double {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 弹幕间隔时间滑块值 (0-100)
     @Published var barrageIntervalSlider: Double {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 窗口前置设置
     @Published var windowAlwaysOnTop: Bool {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 防止息屏设置
     @Published var keepScreenOn: Bool {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
             applyScreenSettings()
         }
     }
@@ -77,14 +85,14 @@ class AppSettings: ObservableObject {
     // 保持后台运行设置
     @Published var keepBackgroundActive: Bool {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
     // 回向偈选择（1-4）
     @Published var selectedDedicationVerse: Int {
         didSet {
-            saveSettings()
+            saveSettingsDebounced()
         }
     }
 
@@ -123,7 +131,27 @@ class AppSettings: ObservableObject {
         applyScreenSettings()
     }
     
-    // 保存设置到UserDefaults
+    // 去抖动保存：延迟0.5秒后执行，避免频繁写入
+    private func saveSettingsDebounced() {
+        // 取消之前的定时器
+        saveTimer?.invalidate()
+
+        // 标记为保存中
+        isSaving = true
+
+        // 创建新的定时器，0.5秒后执行保存
+        saveTimer = Timer.scheduledTimer(withTimeInterval: saveDelay, repeats: false) { [weak self] _ in
+            self?.saveSettings()
+        }
+    }
+
+    // 立即保存（视图消失时调用）
+    func finalizeSave() {
+        saveTimer?.invalidate()
+        saveSettings()
+    }
+
+    // 保存设置到 UserDefaults（不同步到 iCloud）
     private func saveSettings() {
         UserDefaults.standard.set(selectedPrayerType, forKey: "selectedPrayerType")
         UserDefaults.standard.set(barrageDisplayType, forKey: "barrageDisplayType")
@@ -136,6 +164,10 @@ class AppSettings: ObservableObject {
         UserDefaults.standard.set(keepScreenOn, forKey: "keepScreenOn")
         UserDefaults.standard.set(keepBackgroundActive, forKey: "keepBackgroundActive")
         UserDefaults.standard.set(selectedDedicationVerse, forKey: "selectedDedicationVerse")
+
+        // 更新保存状态
+        isSaving = false
+        lastSaveTime = Date()
     }
 
     // 应用屏幕设置
@@ -169,4 +201,5 @@ class AppSettings: ObservableObject {
             return String(format: "%.1fs", interval)
         }
     }
+
 }

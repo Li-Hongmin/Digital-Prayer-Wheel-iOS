@@ -32,6 +32,12 @@ class PrayerLibrary: ObservableObject {
     private var cachedCount: Decimal?
     private var cachedExponent: Int = -1
 
+    // 定时保存机制（优化：每10分钟自动保存一次）
+    @Published var lastCountSaveTime: Date?  // 上次保存时间（用于UI显示）
+    @Published var hasUnsavedChanges: Bool = false  // 是否有未保存的变更
+    private var lastSaveTime: Date = Date()
+    private let saveInterval: TimeInterval = 600  // 10分钟 = 600秒
+
     // 计算属性：获取当前计数的 Decimal 值用于显示
     var currentCount: Decimal {
         // 如果指数未变，直接返回缓存的值
@@ -68,8 +74,12 @@ class PrayerLibrary: ObservableObject {
     init() {
         // 默认使用南无阿弥陀佛
         loadTextsForCurrentType()
-        loadCount()
-        loadRotationSpeed()
+
+        // 延迟加载计数，避免阻塞启动（大指数幂运算可能很慢）
+        Task { @MainActor in
+            loadCount()
+            loadRotationSpeed()
+        }
     }
 
     // MARK: - 公共方法
@@ -108,6 +118,7 @@ class PrayerLibrary: ObservableObject {
     /// 存储形式：只存储指数，节省空间
     /// 每次调用都增加总转数 totalCycles
     /// 上限：当 2^n 超过 1000×10^68 时自动重置为 0
+    /// 性能优化：定时保存，每10分钟自动保存一次，减少磁盘I/O
     func incrementCount() {
         countExponent += 1
         totalCycles += 1  // 每转一次都增加总转数
@@ -118,8 +129,25 @@ class PrayerLibrary: ObservableObject {
             countExponent = 0
         }
 
-        saveCount()
         cachedCount = nil  // 清除缓存，强制重新计算
+        hasUnsavedChanges = true  // 标记有未保存的变更
+
+        // 定时保存优化：检查距离上次保存是否超过10分钟
+        let currentTime = Date()
+        if currentTime.timeIntervalSince(lastSaveTime) >= saveInterval {
+            saveCount()
+            lastSaveTime = currentTime
+            hasUnsavedChanges = false
+        }
+    }
+
+    /// 最终保存计数（视图消失/app关闭时调用，确保保存所有未保存的计数）
+    func finalizeCount() {
+        if hasUnsavedChanges {
+            saveCount()
+            hasUnsavedChanges = false
+            lastSaveTime = Date()
+        }
     }
 
     /// 重置计数
@@ -204,10 +232,13 @@ class PrayerLibrary: ObservableObject {
     private func saveCount() {
         let key = "PrayerCount_\(selectedType.rawValue)"
         let totalCyclesKey = "TotalCycles_\(selectedType.rawValue)"
-        // 保存为整数（指数形式）
+
+        // 仅保存到本地 UserDefaults（不同步到 iCloud）
         UserDefaults.standard.set(countExponent, forKey: key)
-        // 保存总体循环数
         UserDefaults.standard.set(totalCycles, forKey: totalCyclesKey)
+
+        // 更新保存时间（用于UI显示）
+        lastCountSaveTime = Date()
     }
 
     /// 加载转经速度
@@ -220,6 +251,7 @@ class PrayerLibrary: ObservableObject {
     /// 保存转经速度
     private func saveRotationSpeed() {
         let key = "RotationSpeed"
+        // 仅保存到本地 UserDefaults（不同步到 iCloud）
         UserDefaults.standard.set(rotationSpeed, forKey: key)
     }
 

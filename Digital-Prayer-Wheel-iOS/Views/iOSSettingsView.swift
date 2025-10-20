@@ -208,10 +208,26 @@ struct iOSSettingsView: View {
 
                             // 预览当前选择的回向偈
                             let verses: [Int: [String]] = [
-                                1: ["愿以此功德。庄严佛净土。", "上报四重恩。下济三途苦。"],
-                                2: ["愿以此功德，普及于一切。", "我等与众生，皆共成佛道。"],
-                                3: ["愿我临近命终时，尽除一切诸障碍，", "面见彼佛阿弥陀，即得往生安乐刹。"],
-                                4: ["愿生西方净土中，九品莲花为父母。", "花开见佛悟无生，不退菩萨为伴侣。"]
+                                1: [
+                                    "愿以此功德。庄严佛净土。",
+                                    "上报四重恩。下济三途苦。",
+                                    "若有见闻者。悉发菩提心。",
+                                    "尽此一报身。同生极乐国。"
+                                ],
+                                2: [
+                                    "愿以此功德，普及于一切。",
+                                    "我等与众生，皆共成佛道。",
+                                    "愿以此功德，平等施一切，",
+                                    "同发菩提心，往生安乐国。"
+                                ],
+                                3: [
+                                    "愿我临近命终时，尽除一切诸障碍，",
+                                    "面见彼佛阿弥陀，即得往生安乐刹。"
+                                ],
+                                4: [
+                                    "愿生西方净土中，九品莲花为父母。",
+                                    "花开见佛悟无生，不退菩萨为伴侣。"
+                                ]
                             ]
                             let currentVerse = verses[settings.selectedDedicationVerse] ?? verses[1]!
 
@@ -253,11 +269,54 @@ struct iOSSettingsView: View {
                         .cornerRadius(8)
 
                         Spacer()
+
+                        // 保存状态指示器
+                        if settings.isSaving {
+                            HStack(spacing: 8) {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                Text("正在保存...")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.vertical, 8)
+                            .transition(.opacity)
+                        } else if let lastSave = settings.lastSaveTime {
+                            HStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.system(size: 14))
+                                Text("已保存 - \(formatTime(lastSave))")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.vertical, 8)
+                            .transition(.opacity)
+                        }
                     }
                 }
             }
             .padding(16)
             .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    // 格式化时间显示（相对时间）
+    private func formatTime(_ date: Date) -> String {
+        let interval = Date().timeIntervalSince(date)
+
+        if interval < 60 {
+            return "刚刚"
+        } else if interval < 3600 {
+            let minutes = Int(interval / 60)
+            return "\(minutes)分钟前"
+        } else if interval < 86400 {
+            let hours = Int(interval / 3600)
+            return "\(hours)小时前"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            return formatter.string(from: date)
         }
     }
 }

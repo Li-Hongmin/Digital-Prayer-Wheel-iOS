@@ -15,7 +15,10 @@ struct iOSPrayerWheelView: View {
     @Binding var showSettings: Bool
     @Environment(\.responsiveScale) var responsiveScale
 
+    @StateObject var tabletLibrary = TabletLibrary()
     @State private var showHelp: Bool = false
+    @State private var showLeftTablet: Bool = false
+    @State private var showRightTablet: Bool = false
     @State private var rotation: Double = 0
     @State private var rotationTimer: Timer?
     @State private var isRotating: Bool = false
@@ -39,16 +42,16 @@ struct iOSPrayerWheelView: View {
         VStack(spacing: scale.size(8)) {
             // 最顶部：功课名居中，按钮在右侧
             ZStack {
-                // 经文名（居中层）
+                // 经文名（居中层）- 使用原生动画替代高频Timer
                 Text(prayerLibrary.selectedType.rawValue)
                     .font(.system(size: scale.fontSize(22), weight: .bold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: scale.size(12), x: 0, y: 0)
-                    .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
-                        let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
-                        let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
-                        glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
-                    }
+                    .shadow(
+                        color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity),
+                        radius: scale.size(12),
+                        x: 0,
+                        y: 0
+                    )
                     .frame(maxWidth: .infinity)
 
                 // 帮助和设置按钮（右上角层）
@@ -67,133 +70,180 @@ struct iOSPrayerWheelView: View {
             .padding(.horizontal, scale.size(16))
             .padding(.top, scale.size(8))
 
-            // 主内容区：转经筒和计数（纵向布局）
-            VStack(spacing: scale.size(8)) {
+            // 可滚动内容区域
+            ScrollView {
+                VStack(spacing: scale.size(8)) {
+                    // 转经筒主体 + 牌位图标
+                    HStack(spacing: scale.size(16)) {
+                        // 左侧牌位图标（吉祥牌位-红底金边黑字）
+                        MemorialTabletIconView(
+                            title: "吉祥牌位",
+                            backgroundColor: Color(red: 0.90, green: 0.11, blue: 0.14), // 红底
+                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),     // 金边
+                            textColor: Color.black                                       // 黑字
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showLeftTablet.toggle()
+                                if showLeftTablet {
+                                    showRightTablet = false
+                                }
+                            }
+                        }
 
-                // 转经筒主体
-                ZStack {
-                    Circle()
-                        .stroke(
-                            LinearGradient(
-                                gradient: Gradient(colors: [
-                                    Color(red: 0.99, green: 0.84, blue: 0.15),
-                                    Color(red: 0.96, green: 0.78, blue: 0.10)
-                                ]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: scale.size(3)
-                        )
-                        .frame(width: scale.size(160), height: scale.size(160))
+                        // 转经筒
+                        ZStack {
+                            Circle()
+                                .stroke(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.99, green: 0.84, blue: 0.15),
+                                            Color(red: 0.96, green: 0.78, blue: 0.10)
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: scale.size(3)
+                                )
+                                .frame(width: scale.size(160), height: scale.size(160))
 
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(colors: [
-                                    Color(red: 0.90, green: 0.82, blue: 0.55),
-                                    Color(red: 0.75, green: 0.63, blue: 0.35)
-                                ]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: scale.size(150), height: scale.size(150))
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.90, green: 0.82, blue: 0.55),
+                                            Color(red: 0.75, green: 0.63, blue: 0.35)
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: scale.size(150), height: scale.size(150))
 
-                    Circle()
-                        .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
-                        .frame(width: scale.size(140), height: scale.size(140))
+                            Circle()
+                                .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
+                                .frame(width: scale.size(140), height: scale.size(140))
 
-                    Circle()
-                        .fill(Color(red: 0.99, green: 0.84, blue: 0.15))
-                        .frame(width: scale.size(6), height: scale.size(6))
+                            Text("卍")
+                                .font(.system(size: scale.fontSize(100), weight: .bold))
+                                .foregroundColor(.white)
+                                .rotationEffect(.degrees(rotation))  // 使用2D旋转，性能更好
+                        }
+                        .frame(height: scale.size(180))
+                        .scaleEffect(wheelTapScale)
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                wheelTapScale = 0.95
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    wheelTapScale = 1.0
+                                }
+                            }
+                            if isRotating {
+                                stopRotation()
+                            } else {
+                                startRotation()
+                            }
+                        }
 
-                    Text("卍")
-                        .font(.system(size: scale.fontSize(100), weight: .bold))
-                        .foregroundColor(.white)
-                        .rotation3DEffect(
-                            .degrees(rotation),
-                            axis: (x: 0, y: 0, z: 1)
-                        )
-                }
-                .frame(height: scale.size(180))
-                .scaleEffect(wheelTapScale)
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.15)) {
-                        wheelTapScale = 0.95
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            wheelTapScale = 1.0
+                        // 右侧牌位图标（往生牌位-金底金边黑字）
+                        MemorialTabletIconView(
+                            title: "往生牌位",
+                            backgroundColor: Color(red: 1.0, green: 0.84, blue: 0.0), // 金底
+                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),   // 金边
+                            textColor: Color.black                                     // 黑字
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showRightTablet.toggle()
+                                if showRightTablet {
+                                    showLeftTablet = false
+                                }
+                            }
                         }
                     }
-                    if isRotating {
-                        stopRotation()
-                    } else {
-                        startRotation()
-                    }
-                }
 
-                // 计数显示 - 左右分布
-                let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
+                    // 计数显示 - 左右分布
+                    let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
 
-                HStack(spacing: scale.size(16)) {
-                    // 左侧：总转数（左对齐）
-                    VStack(alignment: .leading, spacing: scale.size(4)) {
-                        Text("总转数")
-                            .font(.system(size: scale.fontSize(12), weight: .semibold))
-                            .foregroundColor(Color.white.opacity(0.7))
-                        Text("\(prayerLibrary.totalCycles)")
-                            .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
-                            .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    // 右侧：本次转经数（右对齐）
-                    VStack(alignment: .trailing, spacing: scale.size(4)) {
-                        Text("本次转经数")
-                            .font(.system(size: scale.fontSize(12), weight: .semibold))
-                            .foregroundColor(Color.white.opacity(0.7))
-
-                        HStack(spacing: 0) {
-                            Text(numberStr)
-                                .font(.system(size: scale.fontSize(28), weight: .bold, design: .monospaced))
+                    HStack(spacing: scale.size(16)) {
+                        // 左侧：总转数（左对齐）
+                        VStack(alignment: .leading, spacing: scale.size(4)) {
+                            Text("总转数")
+                                .font(.system(size: scale.fontSize(12), weight: .semibold))
+                                .foregroundColor(Color.white.opacity(0.7))
+                            Text("\(prayerLibrary.totalCycles)")
+                                .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
                                 .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                .lineLimit(1)
-                                .scaleEffect(countScale)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                            VStack(spacing: 0) {
-                                Text(unitStr)
-                                    .font(.system(size: scale.fontSize(14), weight: .bold))
+                        // 右侧：指数级转经数（右对齐）
+                        VStack(alignment: .trailing, spacing: scale.size(4)) {
+                            Text("指数级转经数")
+                                .font(.system(size: scale.fontSize(12), weight: .semibold))
+                                .foregroundColor(Color.white.opacity(0.7))
+
+                            HStack(spacing: 0) {
+                                Text(numberStr)
+                                    .font(.system(size: scale.fontSize(22), weight: .bold, design: .monospaced))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                     .lineLimit(1)
-                                    .truncationMode(.tail)
+                                    .scaleEffect(countScale)
 
-                                Text("次")
-                                    .font(.system(size: scale.fontSize(10), weight: .semibold))
-                                    .foregroundColor(Color.white.opacity(0.7))
+                                VStack(spacing: 0) {
+                                    Text(unitStr)
+                                        .font(.system(size: scale.fontSize(14), weight: .bold))
+                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+
+                                    Text("次")
+                                        .font(.system(size: scale.fontSize(10), weight: .semibold))
+                                        .foregroundColor(Color.white.opacity(0.7))
+                                }
+                                .frame(minWidth: scale.size(70), alignment: .center)
                             }
-                            .frame(minWidth: scale.size(70), alignment: .center)
                         }
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                     }
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.horizontal, scale.size(12))
+                    .padding(.vertical, scale.size(12))
+
+                    // 佛学教导 - 下方（普贤十大愿 + 往生正因，竖屏自动展开）
+                    BuddhistTeachingsView(initiallyExpanded: true)
+                        .padding(.horizontal, scale.size(16))
+                        .padding(.vertical, scale.size(8))
+
+                    // 回向偈 - 最下方
+                    DedicationVerseView(settings: settings)
+                        .padding(.horizontal, scale.size(16))
+                        .padding(.bottom, scale.size(8))
                 }
-                .padding(.horizontal, scale.size(12))
-                .padding(.vertical, scale.size(12))
             }
-            .padding(.horizontal, scale.size(16))
-            .padding(.vertical, scale.size(8))
-
-            // 佛学教导 - 下方（普贤十大愿 + 往生正因，竖屏自动展开）
-            BuddhistTeachingsView(initiallyExpanded: true)
-                .padding(.horizontal, scale.size(16))
-                .padding(.vertical, scale.size(8))
-
-            // 回向偈 - 最下方
-            DedicationVerseView(settings: settings)
-                .padding(.horizontal, scale.size(16))
-                .padding(.bottom, scale.size(8))
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
+        .overlay(
+            Group {
+                if showLeftTablet || showRightTablet {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showLeftTablet = false
+                                showRightTablet = false
+                            }
+                        }
+
+                    MemorialTabletCardView(
+                        tabletLibrary: tabletLibrary,
+                        isPresented: showLeftTablet ? $showLeftTablet : $showRightTablet,
+                        category: showLeftTablet ? "吉祥牌位" : "往生牌位"
+                    )
+                    .frame(maxWidth: scale.size(360), maxHeight: scale.size(500))
+                    .transition(.scale(scale: 0.8).combined(with: .opacity))
+                }
+            }
+        )
         .onChange(of: prayerLibrary.countExponent) { _, _ in
             withAnimation(.easeInOut(duration: 0.3)) {
                 countScale = 1.2
@@ -211,6 +261,12 @@ struct iOSPrayerWheelView: View {
         }
         .onAppear {
             localRotationSpeed = prayerLibrary.rotationSpeed
+
+            // 启动标题发光循环动画（使用原生动画引擎，无需Timer）
+            withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+                glowOpacity = 1.0
+            }
+
             // 延迟 0.3 秒后启动转经，避免启动时黑屏
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 startRotation()
@@ -218,13 +274,14 @@ struct iOSPrayerWheelView: View {
         }
         .onDisappear {
             stopRotation()
+            prayerLibrary.finalizeCount()  // 保存未保存的计数
         }
         .sheet(isPresented: $showHelp) {
             iOSHelpView()
         }
         .sheet(isPresented: $showSettings) {
             iOSSettingsView(
-                settings: AppSettings(),
+                settings: settings,  // 使用传入的共享实例，避免重复创建
                 prayerLibrary: prayerLibrary
             )
         }
@@ -240,10 +297,10 @@ struct iOSPrayerWheelView: View {
         rotationTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { _ in
             rotation += anglePerFrame
 
-            let completedRotations = floor(rotation / 360.0)
-
-            if completedRotations > lastCompletedRotations {
-                lastCompletedRotations = completedRotations
+            // 防止rotation无限增长，每转一圈重置
+            // 这样可以避免浮点数精度问题和内存浪费
+            if rotation >= 360.0 {
+                rotation -= 360.0
 
                 DispatchQueue.main.async {
                     self.prayerLibrary.incrementCount()

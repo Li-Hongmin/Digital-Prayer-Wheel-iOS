@@ -15,7 +15,10 @@ struct iOSLandscapePrayerWheelView: View {
     @Binding var showSettings: Bool
     @Environment(\.responsiveScale) var responsiveScale
 
+    @StateObject var tabletLibrary = TabletLibrary()
     @State private var showHelp: Bool = false
+    @State private var showLeftTablet: Bool = false
+    @State private var showRightTablet: Bool = false
     @State private var rotation: Double = 0
     @State private var rotationTimer: Timer?
     @State private var isRotating: Bool = false
@@ -39,16 +42,16 @@ struct iOSLandscapePrayerWheelView: View {
         VStack(spacing: 0) {
             // 最顶部：功课名居中，按钮在右侧
             ZStack {
-                // 经文名（居中层）
+                // 经文名（居中层）- 使用原生动画替代高频Timer
                 Text(prayerLibrary.selectedType.rawValue)
                     .font(.system(size: scale.fontSize(22), weight: .bold))
                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .shadow(color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity), radius: scale.size(12), x: 0, y: 0)
-                    .onReceive(Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()) { _ in
-                        let timeMultiplier = Date().timeIntervalSinceReferenceDate * 0.33
-                        let normalized = timeMultiplier.truncatingRemainder(dividingBy: 1.0)
-                        glowOpacity = 0.4 + 0.6 * sin(normalized * .pi)
-                    }
+                    .shadow(
+                        color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity),
+                        radius: scale.size(12),
+                        x: 0,
+                        y: 0
+                    )
                     .frame(maxWidth: .infinity)
 
                 // 帮助和设置按钮（右上角层）
@@ -67,8 +70,10 @@ struct iOSLandscapePrayerWheelView: View {
             .padding(.horizontal, scale.size(16))
             .padding(.top, scale.size(8))
 
-            // 主内容区：左侧十大愿 + 中间转经筒和计数 + 右侧净业正因
-            HStack(spacing: scale.size(16)) {
+            // 可滚动内容区域
+            ScrollView {
+                // 主内容区：左侧十大愿 + 中间转经筒和计数 + 右侧净业正因
+                HStack(spacing: scale.size(16)) {
                 // 左侧：普贤十大愿（两列显示，横屏自动展开）
                 VStack {
                     SamanthabhadraVowsTwoColumnView(initiallyExpanded: true)
@@ -77,11 +82,28 @@ struct iOSLandscapePrayerWheelView: View {
                 }
                 .frame(maxWidth: scale.size(260))
 
-                // 中间：转经筒和计数
+                // 中间：转经筒和计数（纵向布局，左右添加牌位）
                 VStack(spacing: scale.size(8)) {
 
-                    // 转经筒主体
-                    ZStack {
+                    // 转经筒主体 + 牌位图标（横向排列）
+                    HStack(spacing: scale.size(12)) {
+                        // 左侧牌位图标（吉祥牌位-红底金边黑字）
+                        MemorialTabletIconView(
+                            title: "吉祥牌位",
+                            backgroundColor: Color(red: 0.90, green: 0.11, blue: 0.14), // 红底
+                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),     // 金边
+                            textColor: Color.black                                       // 黑字
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showLeftTablet.toggle()
+                                if showLeftTablet {
+                                    showRightTablet = false
+                                }
+                            }
+                        }
+
+                        // 转经筒
+                        ZStack {
                         Circle()
                             .stroke(
                                 LinearGradient(
@@ -113,33 +135,42 @@ struct iOSLandscapePrayerWheelView: View {
                             .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
                             .frame(width: scale.size(140), height: scale.size(140))
 
-                        Circle()
-                            .fill(Color(red: 0.99, green: 0.84, blue: 0.15))
-                            .frame(width: scale.size(6), height: scale.size(6))
-
                         Text("卍")
                             .font(.system(size: scale.fontSize(100), weight: .bold))
                             .foregroundColor(.white)
-                            .rotation3DEffect(
-                                .degrees(rotation),
-                                axis: (x: 0, y: 0, z: 1)
-                            )
-                    }
-                    .frame(height: scale.size(180))
-                    .scaleEffect(wheelTapScale)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            wheelTapScale = 0.95
+                            .rotationEffect(.degrees(rotation))  // 使用2D旋转，性能更好
                         }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        .frame(height: scale.size(180))
+                        .scaleEffect(wheelTapScale)
+                        .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.15)) {
-                                wheelTapScale = 1.0
+                                wheelTapScale = 0.95
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    wheelTapScale = 1.0
+                                }
+                            }
+                            if isRotating {
+                                stopRotation()
+                            } else {
+                                startRotation()
                             }
                         }
-                        if isRotating {
-                            stopRotation()
-                        } else {
-                            startRotation()
+
+                        // 右侧牌位图标（往生牌位-金底金边黑字）
+                        MemorialTabletIconView(
+                            title: "往生牌位",
+                            backgroundColor: Color(red: 1.0, green: 0.84, blue: 0.0), // 金底
+                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),   // 金边
+                            textColor: Color.black                                     // 黑字
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showRightTablet.toggle()
+                                if showRightTablet {
+                                    showLeftTablet = false
+                                }
+                            }
                         }
                     }
 
@@ -158,15 +189,15 @@ struct iOSLandscapePrayerWheelView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                        // 右侧：本次转经数（右对齐）
+                        // 右侧：指数级转经数（右对齐）
                         VStack(alignment: .trailing, spacing: scale.size(4)) {
-                            Text("本次转经数")
+                            Text("指数级转经数")
                                 .font(.system(size: scale.fontSize(12), weight: .semibold))
                                 .foregroundColor(Color.white.opacity(0.7))
 
                             HStack(spacing: 0) {
                                 Text(numberStr)
-                                    .font(.system(size: scale.fontSize(28), weight: .bold, design: .monospaced))
+                                    .font(.system(size: scale.fontSize(22), weight: .bold, design: .monospaced))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                     .lineLimit(1)
                                     .scaleEffect(countScale)
@@ -200,16 +231,39 @@ struct iOSLandscapePrayerWheelView: View {
                     Spacer()
                 }
                 .frame(maxWidth: scale.size(240))
-            }
-            .padding(.horizontal, scale.size(12))
-            .padding(.vertical, scale.size(8))
+                }
+                .padding(.horizontal, scale.size(12))
+                .padding(.vertical, scale.size(8))
 
-            // 回向偈 - 最下方（横屏）
-            DedicationVerseView(settings: settings)
-                .padding(.horizontal, scale.size(16))
-                .padding(.bottom, scale.size(8))
+                // 回向偈 - 最下方（横屏）
+                DedicationVerseView(settings: settings)
+                    .padding(.horizontal, scale.size(16))
+                    .padding(.bottom, scale.size(8))
+            }
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
+        .overlay(
+            Group {
+                if showLeftTablet || showRightTablet {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showLeftTablet = false
+                                showRightTablet = false
+                            }
+                        }
+
+                    MemorialTabletCardView(
+                        tabletLibrary: tabletLibrary,
+                        isPresented: showLeftTablet ? $showLeftTablet : $showRightTablet,
+                        category: showLeftTablet ? "吉祥牌位" : "往生牌位"
+                    )
+                    .frame(maxWidth: scale.size(360), maxHeight: scale.size(500))
+                    .transition(.scale(scale: 0.8).combined(with: .opacity))
+                }
+            }
+        )
         .onChange(of: prayerLibrary.countExponent) { _, _ in
             withAnimation(.easeInOut(duration: 0.3)) {
                 countScale = 1.2
@@ -227,6 +281,12 @@ struct iOSLandscapePrayerWheelView: View {
         }
         .onAppear {
             localRotationSpeed = prayerLibrary.rotationSpeed
+
+            // 启动标题发光循环动画（使用原生动画引擎，无需Timer）
+            withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+                glowOpacity = 1.0
+            }
+
             // 延迟 0.3 秒后启动转经，避免启动时黑屏
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 startRotation()
@@ -234,13 +294,14 @@ struct iOSLandscapePrayerWheelView: View {
         }
         .onDisappear {
             stopRotation()
+            prayerLibrary.finalizeCount()  // 保存未保存的计数
         }
         .sheet(isPresented: $showHelp) {
             iOSHelpView()
         }
         .sheet(isPresented: $showSettings) {
             iOSSettingsView(
-                settings: AppSettings(),
+                settings: settings,  // 使用传入的共享实例，避免重复创建
                 prayerLibrary: prayerLibrary
             )
         }
@@ -256,10 +317,10 @@ struct iOSLandscapePrayerWheelView: View {
         rotationTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { _ in
             rotation += anglePerFrame
 
-            let completedRotations = floor(rotation / 360.0)
-
-            if completedRotations > lastCompletedRotations {
-                lastCompletedRotations = completedRotations
+            // 防止rotation无限增长，每转一圈重置
+            // 这样可以避免浮点数精度问题和内存浪费
+            if rotation >= 360.0 {
+                rotation -= 360.0
 
                 DispatchQueue.main.async {
                     self.prayerLibrary.incrementCount()
