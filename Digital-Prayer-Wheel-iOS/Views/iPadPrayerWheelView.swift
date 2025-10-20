@@ -60,9 +60,18 @@ struct iPadPrayerWheelView: View {
             .padding(.vertical, 16)
             .background(Color(red: 0.15, green: 0.15, blue: 0.18))
 
-            // 主内容区：左侧转经筒 + 右侧计数
-            HStack(spacing: 40) {
-                // 左侧：转经筒
+            // 主内容区：左侧普贤十大愿和转经筒 + 右侧计数
+            HStack(spacing: 20) {
+                // 左侧：普贤十大愿
+                VStack {
+                    SamanthabhadraVowsView()
+                        .frame(maxWidth: 120)
+
+                    Spacer()
+                }
+                .frame(maxWidth: 140)
+
+                // 中间：转经筒
                 VStack {
                     ZStack {
                         Circle()
@@ -133,11 +142,8 @@ struct iPadPrayerWheelView: View {
                     Spacer()
                 }
 
-                // 右侧：计数显示和普贤十大愿（纵向排列）
+                // 右侧：计数显示（纵向排列）
                 VStack(spacing: 16) {
-                    // 普贤十大愿
-                    SamanthabhadraVowsView()
-
                     let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
 
                     // 总转数
@@ -192,7 +198,7 @@ struct iPadPrayerWheelView: View {
 
                     Spacer()
                 }
-                .frame(maxWidth: 240)
+                .frame(maxWidth: 200)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
