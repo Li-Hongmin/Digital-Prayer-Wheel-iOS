@@ -48,11 +48,6 @@ struct iOSPrayerWheelView: View {
             .padding(.horizontal, 16)
             .padding(.top, 8)
 
-            // 普贤十大愿 - 顶部
-            SamanthabhadraVowsView()
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-
             Spacer()
 
             // 经文名 - 转经筒正上方
