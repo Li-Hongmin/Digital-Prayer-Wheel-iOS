@@ -203,7 +203,10 @@ struct iOSPrayerWheelView: View {
         }
         .onAppear {
             localRotationSpeed = prayerLibrary.rotationSpeed
-            startRotation()
+            // 延迟 0.3 秒后启动转经，避免启动时黑屏
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                startRotation()
+            }
         }
         .onDisappear {
             stopRotation()
