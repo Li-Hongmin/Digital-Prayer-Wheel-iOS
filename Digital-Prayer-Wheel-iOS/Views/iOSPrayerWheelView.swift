@@ -52,9 +52,7 @@ struct iOSPrayerWheelView: View {
             .padding(.horizontal, scale.size(16))
             .padding(.top, scale.size(8))
 
-            Spacer()
-
-            // 主内容区：经文名、转经筒和计数（纵向布局）
+            // 主内容区：经文名、转经筒和计数（纵向布局，贴顶）
             VStack(spacing: scale.size(8)) {
                 // 经文名
                 Text(prayerLibrary.selectedType.rawValue)
