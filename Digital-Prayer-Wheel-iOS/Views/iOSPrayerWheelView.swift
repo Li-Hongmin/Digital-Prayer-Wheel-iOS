@@ -16,6 +16,7 @@ struct iOSPrayerWheelView: View {
     @Environment(\.responsiveScale) var responsiveScale
 
     @StateObject var tabletLibrary = TabletLibrary()
+    @ObservedObject private var loadingManager = WheelLoadingManager.shared
     @State private var showHelp: Bool = false
     @State private var showLeftTablet: Bool = false
     @State private var showRightTablet: Bool = false
@@ -25,9 +26,10 @@ struct iOSPrayerWheelView: View {
     @State private var isRotating: Bool = false
     @State private var localRotationSpeed: Double = 30
     @State private var lastCompletedRotations: Double = 0
-    @State private var countScale: CGFloat = 1.0
     @State private var wheelTapScale: CGFloat = 1.0
     @State private var glowOpacity: Double = 0.6
+    @State private var showLoadingCompleteBanner: Bool = false
+    @State private var loadingCompleteScale: CGFloat = 1.0
 
     private var timePerRotation: Double {
         60.0 / localRotationSpeed
@@ -41,19 +43,61 @@ struct iOSPrayerWheelView: View {
         let scale = responsiveScale ?? ResponsiveScale()
 
         VStack(spacing: scale.size(8)) {
+            // 装载完成横幅
+            if showLoadingCompleteBanner, let data = loadingManager.loadedData {
+                HStack(spacing: scale.size(8)) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: scale.fontSize(16)))
+                        .foregroundColor(.green)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("装载完成！")
+                            .font(.system(size: scale.fontSize(13), weight: .bold))
+                            .foregroundColor(.white)
+
+                        Text("轮内已装载 \(formatCount(data.repeatCount)) 遍")
+                            .font(.system(size: scale.fontSize(11)))
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+
+                    Spacer()
+                }
+                .padding(.horizontal, scale.size(12))
+                .padding(.vertical, scale.size(8))
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.green.opacity(0.8))
+                )
+                .padding(.horizontal, scale.size(16))
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+
             // 最顶部：功课名居中，按钮在右侧
             ZStack {
-                // 经文名（居中层）- 使用原生动画替代高频Timer
-                Text(prayerLibrary.selectedType.rawValue)
-                    .font(.system(size: scale.fontSize(22), weight: .bold))
-                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .shadow(
-                        color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity),
-                        radius: scale.size(12),
-                        x: 0,
-                        y: 0
-                    )
-                    .frame(maxWidth: .infinity)
+                // 经文名 + 装载信息（居中层）
+                VStack(spacing: scale.size(4)) {
+                    Text(prayerLibrary.selectedType.rawValue)
+                        .font(.system(size: scale.fontSize(22), weight: .bold))
+                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                        .shadow(
+                            color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity),
+                            radius: scale.size(12),
+                            x: 0,
+                            y: 0
+                        )
+
+                    // 装载信息
+                    if loadingManager.isLoaded, let data = loadingManager.loadedData {
+                        HStack(spacing: scale.size(4)) {
+                            Image(systemName: "doc.text.fill")
+                                .font(.system(size: scale.fontSize(10)))
+                            Text("轮内：\(formatCount(data.repeatCount)) 遍")
+                        }
+                        .font(.system(size: scale.fontSize(10), weight: .medium))
+                        .foregroundColor(.white.opacity(0.6))
+                    }
+                }
+                .frame(maxWidth: .infinity)
 
                 // 帮助和设置按钮（右上角层）
                 HStack {
@@ -131,13 +175,28 @@ struct iOSPrayerWheelView: View {
                                 .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
                                 .frame(width: scale.size(140), height: scale.size(140))
 
-                            Text("卍")
-                                .font(.system(size: scale.fontSize(100), weight: .bold))
-                                .foregroundColor(.white)
-                                .rotationEffect(.degrees(rotation))  // 使用2D旋转，性能更好
+                            ZStack(alignment: .center) {
+                                Text("卍")
+                                    .font(.system(size: scale.fontSize(100), weight: .bold))
+                                    .foregroundColor(.white)
+                                    .rotationEffect(.degrees(rotation))
+                                    .offset(y: scale.size(-2))  // Slight upward offset to center visually
+
+                                // Display loaded count in center (small text at bottom)
+                                if loadingManager.isLoaded, let data = loadingManager.loadedData {
+                                    VStack {
+                                        Spacer()
+                                        Text(formatCountShort(data.repeatCount))
+                                            .font(.system(size: scale.fontSize(10), weight: .medium))
+                                            .foregroundColor(.white.opacity(0.7))
+                                            .padding(.bottom, scale.size(10))
+                                    }
+                                    .frame(width: scale.size(140), height: scale.size(140))
+                                }
+                            }
                         }
                         .frame(height: scale.size(180))
-                        .scaleEffect(wheelTapScale)
+                        .scaleEffect(wheelTapScale * loadingCompleteScale)
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.15)) {
                                 wheelTapScale = 0.95
@@ -171,22 +230,36 @@ struct iOSPrayerWheelView: View {
                     }
 
                     // 计数显示 - 左右分布
-                    let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
+                    let multiplier = loadingManager.multiplier
+                    let todayMerit = prayerLibrary.todayCount * multiplier
+
+                    // 计算累计转经天数（有记录的天数）
+                    let totalDays = Set(prayerLibrary.statistics.dailyRecords.map {
+                        Calendar.current.startOfDay(for: $0.date)
+                    }).count
 
                     HStack(spacing: scale.size(16)) {
-                        // 左侧：今日总转数（左对齐，可点击查看日历）
+                        // 左侧：今日功德（左对齐，可点击查看日历）
                         VStack(alignment: .leading, spacing: scale.size(4)) {
                             HStack(spacing: scale.size(4)) {
-                                Text("今日总转数")
+                                Text("今日功德")
                                     .font(.system(size: scale.fontSize(12), weight: .semibold))
                                     .foregroundColor(Color.white.opacity(0.7))
                                 Image(systemName: "calendar")
                                     .font(.system(size: scale.fontSize(10)))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.6))
                             }
-                            Text("\(prayerLibrary.todayCycles)")
-                                .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
-                                .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+
+                            VStack(alignment: .leading, spacing: scale.size(2)) {
+                                Text("\(formatCount(todayMerit))")
+                                    .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
+                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+
+                                // Always display physical rotation count (small text)
+                                Text("(\(prayerLibrary.todayCount) 圈)")
+                                    .font(.system(size: scale.fontSize(9), weight: .regular))
+                                    .foregroundColor(Color.white.opacity(multiplier > 1 ? 0.5 : 0.0))
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .contentShape(Rectangle())
@@ -196,31 +269,22 @@ struct iOSPrayerWheelView: View {
                             }
                         }
 
-                        // 右侧：指数级转经数（右对齐）
+                        // 右侧：累计天数（右对齐）
                         VStack(alignment: .trailing, spacing: scale.size(4)) {
-                            Text("指数级转经数")
+                            Text("累计天数")
                                 .font(.system(size: scale.fontSize(12), weight: .semibold))
                                 .foregroundColor(Color.white.opacity(0.7))
 
-                            HStack(spacing: 0) {
-                                Text(numberStr)
-                                    .font(.system(size: scale.fontSize(22), weight: .bold, design: .monospaced))
-                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                    .lineLimit(1)
-                                    .scaleEffect(countScale)
-
-                                VStack(spacing: 0) {
-                                    Text(unitStr)
-                                        .font(.system(size: scale.fontSize(14), weight: .bold))
+                            VStack(alignment: .trailing, spacing: scale.size(2)) {
+                                HStack(spacing: scale.size(4)) {
+                                    Text("\(totalDays)")
+                                        .font(.system(size: scale.fontSize(28), weight: .bold, design: .monospaced))
                                         .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
 
-                                    Text("次")
-                                        .font(.system(size: scale.fontSize(10), weight: .semibold))
+                                    Text("天")
+                                        .font(.system(size: scale.fontSize(16), weight: .semibold))
                                         .foregroundColor(Color.white.opacity(0.7))
                                 }
-                                .frame(minWidth: scale.size(70), alignment: .center)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .trailing)
@@ -283,14 +347,6 @@ struct iOSPrayerWheelView: View {
                 }
             }
         )
-        .onChange(of: prayerLibrary.countExponent) { _, _ in
-            withAnimation(.easeInOut(duration: 0.3)) {
-                countScale = 1.2
-            }
-            withAnimation(.easeInOut(duration: 0.2).delay(0.1)) {
-                countScale = 1.0
-            }
-        }
         .onChange(of: prayerLibrary.rotationSpeed) { _, newSpeed in
             localRotationSpeed = newSpeed
             if isRotating {
@@ -304,6 +360,15 @@ struct iOSPrayerWheelView: View {
             // 启动标题发光循环动画（使用原生动画引擎，无需Timer）
             withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
                 glowOpacity = 1.0
+            }
+
+            // 监听装载完成通知
+            NotificationCenter.default.addObserver(
+                forName: .wheelLoadingComplete,
+                object: nil,
+                queue: .main
+            ) { _ in
+                showLoadingCompleteAnimation()
             }
 
             // 延迟 0.3 秒后启动转经，避免启动时黑屏
@@ -352,6 +417,49 @@ struct iOSPrayerWheelView: View {
         rotationTimer?.invalidate()
         rotationTimer = nil
         isRotating = false
+    }
+
+    private func formatCount(_ count: Int) -> String {
+        if count >= 100000000 {
+            return "\(count / 100000000) 亿"
+        } else if count >= 10000 {
+            return "\(count / 10000) 万"
+        } else {
+            return "\(count)"
+        }
+    }
+
+    private func formatCountShort(_ count: Int) -> String {
+        if count >= 100000000 {
+            return "\(count / 100000000)亿"
+        } else if count >= 10000 {
+            return "\(count / 10000)万"
+        } else {
+            return "\(count)"
+        }
+    }
+
+    private func showLoadingCompleteAnimation() {
+        // Show banner
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.6)) {
+            showLoadingCompleteBanner = true
+        }
+
+        // Prayer wheel scale animation
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+            loadingCompleteScale = 1.2
+        }
+
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.5).delay(0.2)) {
+            loadingCompleteScale = 1.0
+        }
+
+        // Hide banner after 3 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            withAnimation {
+                showLoadingCompleteBanner = false
+            }
+        }
     }
 }
 
