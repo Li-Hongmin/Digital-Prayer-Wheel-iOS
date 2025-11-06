@@ -161,20 +161,10 @@ extension PrayerLibrary {
     /// 同步数据到小组件
     func syncToWidget() {
         WidgetDataManager.updateAllData(
-            todayCount: self.todayCycles,
-            totalCount: Int(self.currentCount),
+            todayCount: self.todayCount,
+            totalCount: self.totalCycles,
             prayerType: self.selectedType.rawValue
         )
-    }
-    
-    /// 增加转经次数并同步到小组件
-    override func incrementCount() {
-        super.incrementCount() // 调用父类方法
-        
-        // 同步到小组件
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.syncToWidget()
-        }
     }
 }
 

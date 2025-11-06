@@ -4,4 +4,13 @@
    <FileRef
       location = "self:">
    </FileRef>
+   <FileRef
+      location = "group:PrayerWheelWidget.swift">
+   </FileRef>
+   <FileRef
+      location = "group:WidgetDataManager.swift">
+   </FileRef>
+   <FileRef
+      location = "group:WidgetBundle.swift">
+   </FileRef>
 </Workspace>
