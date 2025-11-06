@@ -34,13 +34,11 @@ class ShareImageGenerator {
     /// - Returns: 生成的UIImage
     @MainActor
     static func generateMeritCard(from prayerLibrary: PrayerLibrary) -> UIImage? {
-        let (numberStr, unitStr) = prayerLibrary.formatCountWithChineseUnitsSeparated(prayerLibrary.currentCount)
-
         let cardView = MeritShareCardView(
             prayerType: prayerLibrary.selectedType.rawValue,
             totalCycles: prayerLibrary.totalCycles,
-            exponentialCount: numberStr,
-            exponentialUnit: unitStr,
+            exponentialCount: "\(prayerLibrary.totalCycles)",
+            exponentialUnit: "次",
             date: Date()
         )
 
