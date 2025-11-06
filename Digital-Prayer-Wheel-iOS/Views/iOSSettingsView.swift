@@ -13,6 +13,10 @@ struct iOSSettingsView: View {
     @ObservedObject var prayerLibrary: PrayerLibrary
     @Environment(\.dismiss) var dismiss
 
+    @ObservedObject private var loadingManager = WheelLoadingManager.shared
+    @State private var showLoadingView: Bool = false
+    @State private var inputCount: String = "100000000" // Default 1亿
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
@@ -82,6 +86,121 @@ struct iOSSettingsView: View {
                             }
                             .buttonStyle(.bordered)
                             .tint(.red)
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 10)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+
+                        // 转经筒装载
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("转经筒装载")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(.secondary)
+
+                            if loadingManager.isLoaded, let data = loadingManager.loadedData {
+                                // Already loaded state
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.green)
+                                        Text("转经筒已装载")
+                                            .font(.system(size: 14, weight: .semibold))
+
+                                        Spacer()
+
+                                        // Reload button
+                                        Button(action: {
+                                            loadingManager.clearLoading()
+                                        }) {
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "arrow.clockwise")
+                                                Text("重新装载")
+                                            }
+                                            .font(.system(size: 11))
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 4)
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .tint(.orange)
+                                    }
+
+                                    Divider()
+
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("经文：\(data.prayerType)")
+                                            .font(.system(size: 12))
+
+                                        Text("数量：\(formatCount(data.repeatCount)) 遍")
+                                            .font(.system(size: 12))
+
+                                        Text("装载日期：\(data.loadedDate, style: .date)")
+                                            .font(.system(size: 10))
+                                            .foregroundColor(.secondary)
+                                    }
+
+                                    Text("每转 1 圈 = \(formatCount(data.repeatCount)) 遍功德")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.green)
+                                        .padding(.top, 4)
+                                }
+                                .padding()
+                                .background(Color.green.opacity(0.1))
+                                .cornerRadius(8)
+                            } else {
+                                // Not loaded state
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("模拟传统转经筒装载经文的过程，设定轮内经文数量后，每转一圈相当于念诵该数量的经文")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.secondary)
+
+                                    // Input field
+                                    HStack {
+                                        TextField("输入数量", text: $inputCount)
+                                            .keyboardType(.numberPad)
+                                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                                            .font(.system(size: 13))
+
+                                        Text("遍")
+                                            .foregroundColor(.secondary)
+                                            .font(.system(size: 12))
+                                    }
+
+                                    // Quick select buttons
+                                    HStack(spacing: 8) {
+                                        Button("108") { inputCount = "108" }
+                                            .buttonStyle(.bordered)
+                                            .font(.system(size: 11))
+
+                                        Button("1万") { inputCount = "10000" }
+                                            .buttonStyle(.bordered)
+                                            .font(.system(size: 11))
+
+                                        Button("10万") { inputCount = "100000" }
+                                            .buttonStyle(.bordered)
+                                            .font(.system(size: 11))
+
+                                        Button("1亿") { inputCount = "100000000" }
+                                            .buttonStyle(.bordered)
+                                            .font(.system(size: 11))
+                                    }
+
+                                    // Start loading button
+                                    Button(action: {
+                                        showLoadingView = true
+                                    }) {
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "arrow.down.circle.fill")
+                                            Text("开始装载")
+                                        }
+                                        .font(.system(size: 13, weight: .semibold))
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 10)
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .tint(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                }
+                            }
                         }
                         .padding(.vertical, 8)
                         .padding(.horizontal, 10)
@@ -298,6 +417,34 @@ struct iOSSettingsView: View {
             }
             .padding(16)
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .sheet(isPresented: $showLoadingView) {
+            WheelLoadingView(
+                isPresented: $showLoadingView,
+                prayerType: prayerLibrary.selectedType.rawValue,
+                prayerText: prayerLibrary.selectedType.texts[0],
+                count: Int(inputCount) ?? 100000000
+            ) {
+                // Completion callback
+                Task {
+                    try? await loadingManager.loadPrayer(
+                        prayerType: prayerLibrary.selectedType.rawValue,
+                        prayerText: prayerLibrary.selectedType.texts[0],
+                        count: Int(inputCount) ?? 100000000
+                    )
+                }
+            }
+        }
+    }
+
+    // 格式化数量显示
+    private func formatCount(_ count: Int) -> String {
+        if count >= 100000000 {
+            return "\(count / 100000000) 亿"
+        } else if count >= 10000 {
+            return "\(count / 10000) 万"
+        } else {
+            return "\(count)"
         }
     }
 

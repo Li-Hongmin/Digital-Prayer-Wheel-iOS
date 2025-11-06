@@ -1,5 +1,5 @@
 # CLAUDE.md
-
+使用英语写代码comments，但是中文回复我。
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview

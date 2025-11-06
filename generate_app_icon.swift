@@ -12,34 +12,69 @@ func generateIcon(size: CGSize, scale: CGFloat = 1.0) -> NSImage? {
 
     image.lockFocus()
 
-    // 金黄色渐变背景
-    let gradient = NSGradient(colors: [
+    // 深色背景（和应用背景一致）
+    let bgColor = NSColor(red: 0.12, green: 0.12, blue: 0.14, alpha: 1.0)
+    bgColor.setFill()
+    NSRect(origin: .zero, size: actualSize).fill()
+
+    let center = CGPoint(x: actualSize.width / 2, y: actualSize.height / 2)
+    let radius = actualSize.width * 0.40
+
+    // 外圈：金色渐变描边
+    let outerCircle = NSBezierPath(
+        ovalIn: NSRect(
+            x: center.x - radius,
+            y: center.y - radius,
+            width: radius * 2,
+            height: radius * 2
+        )
+    )
+    let outerGradient = NSGradient(colors: [
         NSColor(red: 0.99, green: 0.84, blue: 0.15, alpha: 1.0),
         NSColor(red: 0.96, green: 0.78, blue: 0.10, alpha: 1.0)
     ])
-    gradient?.draw(in: NSRect(origin: .zero, size: actualSize), angle: -45)
+    outerGradient?.draw(in: outerCircle, angle: -45)
 
-    // 绘制圆形边框
-    let borderPath = NSBezierPath(ovalIn: NSRect(
-        x: actualSize.width * 0.05,
-        y: actualSize.height * 0.05,
-        width: actualSize.width * 0.9,
-        height: actualSize.height * 0.9
-    ))
-    NSColor.white.setStroke()
-    borderPath.lineWidth = actualSize.width * 0.03
-    borderPath.stroke()
+    // 中间圆盘：金色渐变填充
+    let middleRadius = radius * 0.9375
+    let middleCircle = NSBezierPath(
+        ovalIn: NSRect(
+            x: center.x - middleRadius,
+            y: center.y - middleRadius,
+            width: middleRadius * 2,
+            height: middleRadius * 2
+        )
+    )
+    let middleGradient = NSGradient(colors: [
+        NSColor(red: 0.90, green: 0.82, blue: 0.55, alpha: 1.0),
+        NSColor(red: 0.75, green: 0.63, blue: 0.35, alpha: 1.0)
+    ])
+    middleGradient?.draw(in: middleCircle, angle: -45)
 
-    // 绘制卍字
+    // 内圈：金色描边
+    let innerRadius = radius * 0.875
+    let innerCircle = NSBezierPath(
+        ovalIn: NSRect(
+            x: center.x - innerRadius,
+            y: center.y - innerRadius,
+            width: innerRadius * 2,
+            height: innerRadius * 2
+        )
+    )
+    NSColor(red: 0.99, green: 0.84, blue: 0.15, alpha: 1.0).setStroke()
+    innerCircle.lineWidth = actualSize.width * 0.01
+    innerCircle.stroke()
+
+    // 绘制卍字（白色）
     let attributes: [NSAttributedString.Key: Any] = [
-        .font: NSFont.systemFont(ofSize: actualSize.width * 0.5, weight: .bold),
+        .font: NSFont.systemFont(ofSize: actualSize.width * 0.48, weight: .bold),
         .foregroundColor: NSColor.white
     ]
     let text = "卍" as NSString
     let textSize = text.size(withAttributes: attributes)
     let textRect = NSRect(
         x: (actualSize.width - textSize.width) / 2,
-        y: (actualSize.height - textSize.height) / 2,
+        y: (actualSize.height - textSize.height) / 2 - actualSize.height * 0.02,
         width: textSize.width,
         height: textSize.height
     )
