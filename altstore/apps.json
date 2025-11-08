@@ -3,7 +3,6 @@
   "subtitle": "藏传佛教修行工具",
   "description": "提供正宗的藏传佛教转经轮应用，帮助修行者记录持诵功课，支持多种经文和咒语计数。",
   "iconURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/icon-512.png",
-  "headerURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/header.png",
   "website": "https://github.com/Li-Hongmin/Digital-Prayer-Wheel-iOS",
   "tintColor": "D4AF37",
   "featuredApps": [
@@ -19,18 +18,12 @@
       "iconURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/app-icon-1024.png",
       "tintColor": "8B4513",
       "category": "lifestyle",
-      "screenshots": {
-        "iphone": [
-          "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-1.png",
-          "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-2.png",
-          "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-3.png",
-          "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-4.png"
-        ],
-        "ipad": [
-          "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/ipad-1.png",
-          "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/ipad-2.png"
-        ]
-      },
+      "screenshots": [
+        "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-1.png",
+        "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-2.png",
+        "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-3.png",
+        "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-4.png"
+      ],
       "versions": [
         {
           "version": "1.0",
