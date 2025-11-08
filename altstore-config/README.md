@@ -127,7 +127,7 @@ https://buddhist-dev.github.io/Digital-Prayer-Wheel-AltStore/
 ## ⚠️ 重要注意事项
 
 ### Bundle Identifier 确认
-当前配置使用的 Bundle ID 是：`YunQIAI.Digital-Prayer-Wheel`
+当前配置使用的 Bundle ID 是：`Li-Hongmin.Digital-Prayer-Wheel`
 - 确保这与你实际构建的 IPA 中的 Bundle ID 一致
 - 可在 Xcode 项目设置中确认
 

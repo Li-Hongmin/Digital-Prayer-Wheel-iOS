@@ -200,7 +200,7 @@ git push
 
 ### Q2: 应用无法安装？
 
-1. 检查 Bundle ID 是否匹配：`YunQIAI.Digital-Prayer-Wheel`
+1. 检查 Bundle ID 是否匹配：`Li-Hongmin.Digital-Prayer-Wheel`
 2. 确认 IPA 文件签名正确
 3. 检查 iOS 版本要求（修正部署目标）
 
