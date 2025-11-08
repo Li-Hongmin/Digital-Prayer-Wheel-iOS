@@ -6,13 +6,13 @@
   "website": "https://github.com/Li-Hongmin/Digital-Prayer-Wheel-iOS",
   "tintColor": "D4AF37",
   "featuredApps": [
-    "YunQIAI.Digital-Prayer-Wheel"
+    "Li-Hongmin.Digital-Prayer-Wheel"
   ],
   "apps": [
     {
       "name": "至诚转经轮",
-      "bundleIdentifier": "YunQIAI.Digital-Prayer-Wheel",
-      "developerName": "YunQIAI",
+      "bundleIdentifier": "Li-Hongmin.Digital-Prayer-Wheel",
+      "developerName": "Li-Hongmin",
       "subtitle": "藏传佛教修行助手",
       "localizedDescription": "至诚转经轮是一款专为藏传佛教修行者设计的 iOS 应用，提供精美的转经轮界面和强大的计数功能。\n\n主要功能：\n• 四种经文选择：六字大明咒、心经、南无阿弥陀佛、南无观世音菩萨\n• 指数增长计数系统：支持极大数值记录\n• 中文单位显示：万、亿、兆等传统计数单位\n• 弹幕显示模式：多种显示方式和自定义设置\n• 持久化存储：自动保存修行进度\n• iPad 优化：支持 iPhone 和 iPad 双平台\n\n适合每日持诵、长期修行记录使用。",
       "iconURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/app-icon-1024.png",
@@ -48,7 +48,7 @@
       "date": "2025-01-15T10:00:00+08:00",
       "tintColor": "D4AF37",
       "notify": true,
-      "appID": "YunQIAI.Digital-Prayer-Wheel"
+      "appID": "Li-Hongmin.Digital-Prayer-Wheel"
     }
   ]
 }
