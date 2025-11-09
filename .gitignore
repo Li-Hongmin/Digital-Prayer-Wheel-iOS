@@ -1,1 +1,21 @@
 *.backup
+
+# Build outputs
+*.ipa
+*.app
+*.dSYM.zip
+*.dSYM
+
+# Build directories
+build/
+build-export/
+DerivedData/
+
+# Export options
+ExportOptions*.plist
+
+# Xcode
+xcuserdata/
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
+*.xcuserstate
