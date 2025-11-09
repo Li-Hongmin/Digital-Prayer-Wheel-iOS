@@ -19,3 +19,24 @@ xcuserdata/
 *.xcworkspace
 !*.xcworkspace/contents.xcworkspacedata
 *.xcuserstate
+
+# System Files
+.DS_Store
+**/.DS_Store
+*~
+.Spotlight-V100
+.Trashes
+
+# AltStore distribution (keep config, ignore generated files)
+altstore/releases/*.ipa
+altstore/screenshots/*.png
+
+# Temporary files
+screen_shot.png
+*.tmp
+*.log
+Packaging.log
+
+# IDE
+.vscode/
+.idea/
