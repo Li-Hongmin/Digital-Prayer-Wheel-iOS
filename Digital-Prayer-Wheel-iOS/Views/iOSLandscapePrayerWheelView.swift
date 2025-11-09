@@ -347,7 +347,7 @@ struct iOSLandscapePrayerWheelView: View {
                 }
             }
         )
-        .onChange(of: prayerLibrary.rotationSpeed) { _, newSpeed in
+        .onChange(of: prayerLibrary.rotationSpeed) { newSpeed in
             localRotationSpeed = newSpeed
             if isRotating {
                 stopRotation()
@@ -471,6 +471,7 @@ struct iOSLandscapePrayerWheelView: View {
     }
 }
 
+@available(iOS 17.0, *)
 #Preview {
     @Previewable @State var showSettings = false
     return iOSLandscapePrayerWheelView(

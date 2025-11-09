@@ -347,7 +347,7 @@ struct iOSPrayerWheelView: View {
                 }
             }
         )
-        .onChange(of: prayerLibrary.rotationSpeed) { _, newSpeed in
+        .onChange(of: prayerLibrary.rotationSpeed) { newSpeed in
             localRotationSpeed = newSpeed
             if isRotating {
                 stopRotation()
@@ -463,6 +463,7 @@ struct iOSPrayerWheelView: View {
     }
 }
 
+@available(iOS 17.0, *)
 #Preview {
     @Previewable @State var showSettings = false
     return iOSPrayerWheelView(

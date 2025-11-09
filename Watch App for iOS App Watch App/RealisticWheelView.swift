@@ -147,11 +147,11 @@ struct RealisticWheelView: View {
         .onDisappear {
             stopRotation()
         }
-        .onChange(of: library.rotationSpeed) { oldValue, newValue in
+        .onChange(of: library.rotationSpeed) { newValue in
             // Restart rotation with new speed
             stopRotation()
             startRotation()
-            print("⚡ Speed changed: \(Int(oldValue)) → \(Int(newValue)) RPM")
+            print("⚡ Speed changed to: \(Int(newValue)) RPM")
         }
     }
 

@@ -48,7 +48,7 @@ struct iOSSettingsView: View {
                                 }
                                 .pickerStyle(.menu)
                                 .frame(maxWidth: .infinity)
-                                .onChange(of: settings.selectedPrayerType) { _, newValue in
+                                .onChange(of: settings.selectedPrayerType) { newValue in
                                     if let prayerType = PrayerType(rawValue: newValue) {
                                         prayerLibrary.setType(prayerType)
                                     }

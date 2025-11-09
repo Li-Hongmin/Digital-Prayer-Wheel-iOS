@@ -184,6 +184,7 @@ struct DayCell: View {
     }
 }
 
+@available(iOS 17.0, *)
 #Preview {
     @Previewable @State var currentMonth = Date()
     @Previewable @State var selectedDate = Date()

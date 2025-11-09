@@ -28,11 +28,11 @@
         {
           "version": "1.1",
           "buildVersion": "2",
-          "date": "2025-11-09T22:00:00+08:00",
-          "localizedDescription": "重大更新 - Apple Watch 支持\n• 🆕 Apple Watch 独立应用：完全复刻 iOS 转经轮界面\n• 🆕 智能补圈系统：应用关闭期间自动补充转经圈数\n• 🆕 Digital Crown 调速：旋转表冠调节转速（6-600 圈/分）\n• 优化计数系统：改为简单整数累加\n• 新增每日独立计数：午夜自动重置\n• 新增累计天数统计：记录修行天数\n• 优化性能：定时保存机制\n• watchOS 10.0+ 支持：兼容 Apple Watch SE/Series 6 及更新机型",
+          "date": "2025-11-09T22:30:00+08:00",
+          "localizedDescription": "重大更新 - Apple Watch 支持\n• 🆕 Apple Watch 独立应用：完全复刻 iOS 转经轮界面\n• 🆕 智能补圈系统：应用关闭期间自动补充转经圈数\n• 🆕 Digital Crown 调速：旋转表冠调节转速（6-600 圈/分）\n• 优化计数系统：改为简单整数累加\n• 新增每日独立计数：午夜自动重置\n• 新增累计天数统计：记录修行天数\n• 优化性能：定时保存机制\n• 兼容性优化：iOS 16.0+ / watchOS 8.0+\n\n支持设备：\n• iOS: iPhone 8 及更新机型 (2017+)\n• watchOS: Apple Watch Series 3/SE/Ultra 全系列",
           "downloadURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/releases/Digital-Prayer-Wheel-v1.1.ipa",
-          "size": 1235777,
-          "minOSVersion": "15.0"
+          "size": 1309769,
+          "minOSVersion": "16.0"
         },
         {
           "version": "1.0",

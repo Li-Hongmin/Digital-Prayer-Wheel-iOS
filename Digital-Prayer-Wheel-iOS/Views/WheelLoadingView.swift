@@ -205,6 +205,7 @@ struct ParticleData: Identifiable {
     var opacity: Double
 }
 
+@available(iOS 17.0, *)
 #Preview {
     @Previewable @State var isPresented = true
     return WheelLoadingView(

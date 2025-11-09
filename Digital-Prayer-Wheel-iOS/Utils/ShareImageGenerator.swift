@@ -19,13 +19,21 @@ class ShareImageGenerator {
     /// - Returns: 渲染后的UIImage
     @MainActor
     static func render<Content: View>(_ view: Content, size: CGSize) -> UIImage? {
-        let renderer = ImageRenderer(content: view)
-        renderer.proposedSize = ProposedViewSize(size)
+        if #available(iOS 16.0, *) {
+            let renderer = ImageRenderer(content: view)
+            renderer.proposedSize = ProposedViewSize(size)
+            renderer.scale = 2.0
+            return renderer.uiImage
+        } else {
+            // iOS 15 fallback: use UIGraphicsImageRenderer
+            let controller = UIHostingController(rootView: view)
+            controller.view.bounds = CGRect(origin: .zero, size: size)
 
-        // 使用2x缩放以获得高质量图片
-        renderer.scale = 2.0
-
-        return renderer.uiImage
+            let renderer = UIGraphicsImageRenderer(size: size)
+            return renderer.image { ctx in
+                controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+            }
+        }
     }
 
     /// 生成功德分享卡片图片

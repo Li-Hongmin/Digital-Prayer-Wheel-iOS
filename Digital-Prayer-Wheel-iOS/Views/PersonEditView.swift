@@ -36,9 +36,14 @@ struct PersonEditView: View {
                     TextField("姓名（必填）", text: $name)
                         .font(.system(size: scale.fontSize(16)))
 
-                    TextField("备注（可选）", text: $notes, axis: .vertical)
-                        .font(.system(size: scale.fontSize(16)))
-                        .lineLimit(3...6)
+                    if #available(iOS 16.0, *) {
+                        TextField("备注（可选）", text: $notes, axis: .vertical)
+                            .font(.system(size: scale.fontSize(16)))
+                            .lineLimit(3...6)
+                    } else {
+                        TextField("备注（可选）", text: $notes)
+                            .font(.system(size: scale.fontSize(16)))
+                    }
                 }
 
                 Section {

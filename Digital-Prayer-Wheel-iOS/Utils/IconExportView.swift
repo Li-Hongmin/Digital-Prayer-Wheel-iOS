@@ -15,7 +15,20 @@ struct IconExportView: View {
     @State private var imageToShare: UIImage?
 
     var body: some View {
-        NavigationStack {
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                contentView
+            }
+        } else {
+            NavigationView {
+                contentView
+            }
+            .navigationViewStyle(.stack)
+        }
+    }
+
+    private var contentView: some View {
+        Group {
             VStack(spacing: 30) {
                 Text("应用图标生成器")
                     .font(.title.bold())
@@ -135,8 +148,8 @@ struct IconExportView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 20)
             }
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showShareSheet) {
             if let image = imageToShare {
                 ShareSheet(items: [image])

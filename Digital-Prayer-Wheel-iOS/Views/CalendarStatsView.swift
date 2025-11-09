@@ -245,6 +245,7 @@ struct SelectedDateDetailView: View {
     }
 }
 
+@available(iOS 17.0, *)
 #Preview {
     @Previewable @State var isPresented = true
     let stats = PrayerStatistics()
