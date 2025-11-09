@@ -3,22 +3,76 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 70;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		831166192EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 831166182EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8311662E2EC0B188003BE7E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8311662A2EC0B188003BE7E6 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8311661A2EC0B0E5003BE7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83BB40F72EA5DC3B00BE2E22 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 831166172EC0B0E5003BE7E6;
+			remoteInfo = "Digital-Prayer-Wheel-Watch Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		831166262EC0B0E6003BE7E6 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				831166192EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		831166132EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Digital-Prayer-Wheel-Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		831166182EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Digital-Prayer-Wheel-Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8311662A2EC0B188003BE7E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8311662B2EC0B188003BE7E6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8311662C2EC0B188003BE7E6 /* Digital_Prayer_Wheel_WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Digital_Prayer_Wheel_WatchApp.swift; sourceTree = "<group>"; };
 		83BB40FF2EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Digital-Prayer-Wheel-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		83BB41012EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Digital-Prayer-Wheel-iOS";
-			sourceTree = "<group>";
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		831166372EC0B581003BE7E6 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/AppSettings.swift,
+				Models/DailyPrayerRecord.swift,
+				Models/PrayerText.swift,
+				Services/BackgroundCalculator.swift,
+				Services/PrayerLibrary.swift,
+				Services/PrayerStatistics.swift,
+			);
+			target = 831166172EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */;
 		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		831166062EC0AFB7003BE7E6 /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
+		8311661C2EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Digital-Prayer-Wheel-Watch Watch App"; sourceTree = "<group>"; };
+		83BB41012EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (831166372EC0B581003BE7E6 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Digital-Prayer-Wheel-iOS"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		831166152EC0B0E5003BE7E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		83BB40FC2EA5DC3B00BE2E22 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -29,11 +83,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8311662D2EC0B188003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				8311662A2EC0B188003BE7E6 /* Assets.xcassets */,
+				8311662B2EC0B188003BE7E6 /* ContentView.swift */,
+				8311662C2EC0B188003BE7E6 /* Digital_Prayer_Wheel_WatchApp.swift */,
+			);
+			path = "Digital-Prayer-Wheel-Watch Watch App";
+			sourceTree = "<group>";
+		};
 		83BB40F62EA5DC3B00BE2E22 = {
 			isa = PBXGroup;
 			children = (
+				8311662D2EC0B188003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */,
 				83BB41012EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */,
+				8311661C2EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */,
 				83BB41002EA5DC3B00BE2E22 /* Products */,
+				831166062EC0AFB7003BE7E6 /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,6 +108,8 @@
 			isa = PBXGroup;
 			children = (
 				83BB40FF2EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS.app */,
+				831166132EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch.app */,
+				831166182EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +117,47 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		831166122EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 831166272EC0B0E6003BE7E6 /* Build configuration list for PBXNativeTarget "Digital-Prayer-Wheel-Watch" */;
+			buildPhases = (
+				831166112EC0B0E5003BE7E6 /* Resources */,
+				831166262EC0B0E6003BE7E6 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8311661B2EC0B0E5003BE7E6 /* PBXTargetDependency */,
+			);
+			name = "Digital-Prayer-Wheel-Watch";
+			packageProductDependencies = (
+			);
+			productName = "Digital-Prayer-Wheel-Watch";
+			productReference = 831166132EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		831166172EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 831166232EC0B0E6003BE7E6 /* Build configuration list for PBXNativeTarget "Digital-Prayer-Wheel-Watch Watch App" */;
+			buildPhases = (
+				831166142EC0B0E5003BE7E6 /* Sources */,
+				831166152EC0B0E5003BE7E6 /* Frameworks */,
+				831166162EC0B0E5003BE7E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8311661C2EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */,
+			);
+			name = "Digital-Prayer-Wheel-Watch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "Digital-Prayer-Wheel-Watch Watch App";
+			productReference = 831166182EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
 		83BB40FE2EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 83BB410A2EA5DC3C00BE2E22 /* Build configuration list for PBXNativeTarget "Digital-Prayer-Wheel-iOS" */;
@@ -61,6 +171,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				831166062EC0AFB7003BE7E6 /* Shared */,
 				83BB41012EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */,
 			);
 			name = "Digital-Prayer-Wheel-iOS";
@@ -77,15 +188,22 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
+					831166122EC0B0E5003BE7E6 = {
+						CreatedOnToolsVersion = 26.1;
+					};
+					831166172EC0B0E5003BE7E6 = {
+						CreatedOnToolsVersion = 26.1;
+					};
 					83BB40FE2EA5DC3B00BE2E22 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
 			buildConfigurationList = 83BB40FA2EA5DC3B00BE2E22 /* Build configuration list for PBXProject "Digital-Prayer-Wheel-iOS" */;
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -94,17 +212,33 @@
 			);
 			mainGroup = 83BB40F62EA5DC3B00BE2E22;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			productRefGroup = 83BB41002EA5DC3B00BE2E22 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				83BB40FE2EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */,
+				831166122EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch */,
+				831166172EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		831166112EC0B0E5003BE7E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8311662E2EC0B188003BE7E6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		831166162EC0B0E5003BE7E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		83BB40FD2EA5DC3B00BE2E22 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +249,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		831166142EC0B0E5003BE7E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		83BB40FB2EA5DC3B00BE2E22 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +265,115 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		8311661B2EC0B0E5003BE7E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 831166172EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */;
+			targetProxy = 8311661A2EC0B0E5003BE7E6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		831166242EC0B0E6003BE7E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Digital-Prayer-Wheel-Watch";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel-Watch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		831166252EC0B0E6003BE7E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Digital-Prayer-Wheel-Watch";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel-Watch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		831166282EC0B0E6003BE7E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				INFOPLIST_KEY_CFBundleDisplayName = "Digital-Prayer-Wheel-Watch";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel-Watch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		831166292EC0B0E6003BE7E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				INFOPLIST_KEY_CFBundleDisplayName = "Digital-Prayer-Wheel-Watch";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel-Watch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		83BB41082EA5DC3C00BE2E22 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -269,6 +518,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -302,6 +552,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -317,6 +568,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		831166232EC0B0E6003BE7E6 /* Build configuration list for PBXNativeTarget "Digital-Prayer-Wheel-Watch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				831166242EC0B0E6003BE7E6 /* Debug */,
+				831166252EC0B0E6003BE7E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		831166272EC0B0E6003BE7E6 /* Build configuration list for PBXNativeTarget "Digital-Prayer-Wheel-Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				831166282EC0B0E6003BE7E6 /* Debug */,
+				831166292EC0B0E6003BE7E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		83BB40FA2EA5DC3B00BE2E22 /* Build configuration list for PBXProject "Digital-Prayer-Wheel-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
