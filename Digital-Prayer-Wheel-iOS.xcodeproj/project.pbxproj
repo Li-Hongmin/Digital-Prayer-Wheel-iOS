@@ -35,9 +35,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8311662A2EC0B188003BE7E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8311662B2EC0B188003BE7E6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		8311662C2EC0B188003BE7E6 /* Digital_Prayer_Wheel_WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Digital_Prayer_Wheel_WatchApp.swift; sourceTree = "<group>"; };
 		83ABF6E92EC0C96700B3BC23 /* Watch App for iOS App Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Watch App for iOS App Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BB40FF2EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Digital-Prayer-Wheel-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -58,8 +55,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		831166062EC0AFB7003BE7E6 /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
-		8311661C2EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Digital-Prayer-Wheel-Watch Watch App"; sourceTree = "<group>"; };
 		83ABF6EA2EC0C96700B3BC23 /* Watch App for iOS App Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Watch App for iOS App Watch App"; sourceTree = "<group>"; };
 		83BB41012EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (83ABF6FE2EC0C9E700B3BC23 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Digital-Prayer-Wheel-iOS"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -82,25 +77,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8311662D2EC0B188003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */ = {
-			isa = PBXGroup;
-			children = (
-				8311662A2EC0B188003BE7E6 /* Assets.xcassets */,
-				8311662B2EC0B188003BE7E6 /* ContentView.swift */,
-				8311662C2EC0B188003BE7E6 /* Digital_Prayer_Wheel_WatchApp.swift */,
-			);
-			path = "Digital-Prayer-Wheel-Watch Watch App";
-			sourceTree = "<group>";
-		};
 		83BB40F62EA5DC3B00BE2E22 = {
 			isa = PBXGroup;
 			children = (
-				8311662D2EC0B188003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */,
 				83BB41012EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */,
-				8311661C2EC0B0E5003BE7E6 /* Digital-Prayer-Wheel-Watch Watch App */,
 				83ABF6EA2EC0C96700B3BC23 /* Watch App for iOS App Watch App */,
 				83BB41002EA5DC3B00BE2E22 /* Products */,
-				831166062EC0AFB7003BE7E6 /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -153,7 +135,6 @@
 				83ABF6F22EC0C96800B3BC23 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				831166062EC0AFB7003BE7E6 /* Shared */,
 				83BB41012EA5DC3B00BE2E22 /* Digital-Prayer-Wheel-iOS */,
 			);
 			name = "Digital-Prayer-Wheel-iOS";
