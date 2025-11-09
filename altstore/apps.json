@@ -13,8 +13,8 @@
       "name": "至诚转经轮",
       "bundleIdentifier": "Li-Hongmin.Digital-Prayer-Wheel",
       "developerName": "Li-Hongmin",
-      "subtitle": "佛教修行助手",
-      "localizedDescription": "至诚转经轮是一款专为佛教修行者设计的 iOS 应用，提供精美的转经轮界面和强大的计数功能。\n\n主要功能：\n• 四种经文选择：六字大明咒、心经、南无阿弥陀佛、南无观世音菩萨\n• 指数增长计数系统：支持极大数值记录\n• 中文单位显示：万、亿、兆等传统计数单位\n• 弹幕显示模式：多种显示方式和自定义设置\n• 持久化存储：自动保存修行进度\n• iPad 优化：支持 iPhone 和 iPad 双平台\n\n适合每日持诵、长期修行记录使用。",
+      "subtitle": "佛教修行助手 · 支持 Apple Watch",
+      "localizedDescription": "至诚转经轮是一款专为佛教修行者设计的应用，提供精美的转经轮界面和强大的计数功能。现已支持 Apple Watch！\n\n主要功能：\n• 四种经文选择：六字大明咒、心经、南无阿弥陀佛、南无观世音菩萨\n• 🆕 Apple Watch 独立应用：抬腕即转，自动计数\n• 🆕 智能补圈系统：应用关闭期间自动补充转经圈数\n• 🆕 Digital Crown 调速：6-600 圈/分钟灵活调节\n• 简化整数计数：清晰直观的今日/总计统计\n• 每日自动重置：独立记录每日功德\n• 弹幕显示模式：多种显示方式和自定义设置\n• 持久化存储：自动保存修行进度\n• 双平台支持：iPhone、iPad 和 Apple Watch\n\n⌚ Apple Watch 特性：\n• 完全复刻 iOS 转经轮界面（金色圆圈 + 卍字）\n• 自动旋转，无需操作\n• 智能补圈：关闭应用也在累积功德\n• 极简设计：专注修行体验\n\n适合每日持诵、长期修行记录使用。",
       "iconURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/app-icon-1024.png",
       "tintColor": "8B4513",
       "category": "lifestyle",
@@ -25,6 +25,15 @@
         "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/screenshots/iphone-4.png"
       ],
       "versions": [
+        {
+          "version": "1.1",
+          "buildVersion": "2",
+          "date": "2025-11-09T22:00:00+08:00",
+          "localizedDescription": "重大更新 - Apple Watch 支持\n• 🆕 Apple Watch 独立应用：完全复刻 iOS 转经轮界面\n• 🆕 智能补圈系统：应用关闭期间自动补充转经圈数\n• 🆕 Digital Crown 调速：旋转表冠调节转速（6-600 圈/分）\n• 优化计数系统：改为简单整数累加\n• 新增每日独立计数：午夜自动重置\n• 新增累计天数统计：记录修行天数\n• 优化性能：定时保存机制\n• watchOS 10.0+ 支持：兼容 Apple Watch SE/Series 6 及更新机型",
+          "downloadURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/releases/Digital-Prayer-Wheel-v1.1.ipa",
+          "size": 1235777,
+          "minOSVersion": "15.0"
+        },
         {
           "version": "1.0",
           "buildVersion": "1",
@@ -43,12 +52,21 @@
   ],
   "news": [
     {
+      "title": "至诚转经轮 1.1 - Apple Watch 支持",
+      "identifier": "digital-prayer-wheel-1.1-watch-release",
+      "caption": "重大更新！现已支持 Apple Watch，新增智能补圈系统，修行时间不浪费。抬腕即转，功德自动累积。",
+      "date": "2025-11-09T22:00:00+08:00",
+      "tintColor": "D4AF37",
+      "notify": true,
+      "appID": "Li-Hongmin.Digital-Prayer-Wheel"
+    },
+    {
       "title": "至诚转经轮 1.0 发布",
       "identifier": "digital-prayer-wheel-1.0-release",
       "caption": "全新的佛教修行助手现已上线！支持四种经文，指数计数系统，适合长期修行使用。",
       "date": "2025-01-15T10:00:00+08:00",
       "tintColor": "D4AF37",
-      "notify": true,
+      "notify": false,
       "appID": "Li-Hongmin.Digital-Prayer-Wheel"
     }
   ]
