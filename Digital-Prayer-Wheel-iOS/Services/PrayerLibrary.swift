@@ -14,12 +14,17 @@ class PrayerLibrary: ObservableObject {
     // 统计管理器
     @Published var statistics = PrayerStatistics()
 
+    // 共享数据管理器 (iOS 和 Watch 同步)
+    private let sharedData = SharedDataManager.shared
+
     // 当前选择的经文类型
     @Published var selectedType: PrayerType = .amitabha {
         didSet {
             loadTextsForCurrentType()
             loadCount()
             checkDailyReset() // 切换经文时也检查是否需要重置
+            // Sync type change to shared storage
+            sharedData.saveSelectedType(selectedType.rawValue)
         }
     }
 
@@ -169,30 +174,51 @@ class PrayerLibrary: ObservableObject {
         currentIndex = 0 // 重置索引
     }
 
-    /// 加载计数
+    /// 加载计数 - 优先从共享存储加载，如果未配置则使用本地存储
     private func loadCount() {
-        let totalCyclesKey = "TotalCycles_\(selectedType.rawValue)"
-        let todayKey = "TodayCount_\(selectedType.rawValue)"
-
         // 加载每日重置日期
         loadDailyResetDate()
 
         // 检查是否需要重置（跨日检测）
         checkDailyReset()
 
-        // 加载今日计数和总循环数
-        todayCount = UserDefaults.standard.integer(forKey: todayKey)
-        totalCycles = UserDefaults.standard.integer(forKey: totalCyclesKey)
+        // Try to load from shared storage first
+        if sharedData.isConfigured {
+            let (sharedTodayCount, sharedTotalCycles) = sharedData.loadCount(type: selectedType.rawValue)
+
+            // Merge with local data (take maximum to avoid data loss)
+            let localTodayCount = UserDefaults.standard.integer(forKey: "TodayCount_\(selectedType.rawValue)")
+            let localTotalCycles = UserDefaults.standard.integer(forKey: "TotalCycles_\(selectedType.rawValue)")
+
+            todayCount = max(sharedTodayCount, localTodayCount)
+            totalCycles = max(sharedTotalCycles, localTotalCycles)
+
+            // If merged values differ, save back to shared storage
+            if todayCount != sharedTodayCount || totalCycles != sharedTotalCycles {
+                sharedData.saveCount(type: selectedType.rawValue, todayCount: todayCount, totalCycles: totalCycles)
+                print("🔄 Merged local and shared data")
+            }
+        } else {
+            // Fallback to local storage only
+            todayCount = UserDefaults.standard.integer(forKey: "TodayCount_\(selectedType.rawValue)")
+            totalCycles = UserDefaults.standard.integer(forKey: "TotalCycles_\(selectedType.rawValue)")
+            print("⚠️ App Group not configured, using local storage only")
+        }
     }
 
-    /// 保存计数
+    /// 保存计数 - 同时保存到本地和共享存储
     private func saveCount() {
         let totalCyclesKey = "TotalCycles_\(selectedType.rawValue)"
         let todayKey = "TodayCount_\(selectedType.rawValue)"
 
-        // 保存到本地 UserDefaults（不同步到 iCloud）
+        // 保存到本地 UserDefaults
         UserDefaults.standard.set(todayCount, forKey: todayKey)
         UserDefaults.standard.set(totalCycles, forKey: totalCyclesKey)
+
+        // 同时保存到共享存储 (iOS 和 Watch 同步)
+        if sharedData.isConfigured {
+            sharedData.saveCount(type: selectedType.rawValue, todayCount: todayCount, totalCycles: totalCycles)
+        }
 
         // 更新保存时间（用于UI显示）
         lastCountSaveTime = Date()
@@ -215,18 +241,26 @@ class PrayerLibrary: ObservableObject {
         }
     }
 
-    /// 加载转经速度
+    /// 加载转经速度 - 优先从共享存储加载
     private func loadRotationSpeed() {
-        let key = "RotationSpeed"
-        let speed = UserDefaults.standard.double(forKey: key)
-        rotationSpeed = speed > 0 ? speed : 30
+        if sharedData.isConfigured {
+            rotationSpeed = sharedData.loadRotationSpeed()
+        } else {
+            let key = "RotationSpeed"
+            let speed = UserDefaults.standard.double(forKey: key)
+            rotationSpeed = speed > 0 ? speed : 30
+        }
     }
 
-    /// 保存转经速度
+    /// 保存转经速度 - 同时保存到本地和共享存储
     private func saveRotationSpeed() {
         let key = "RotationSpeed"
-        // 仅保存到本地 UserDefaults（不同步到 iCloud）
+        // 保存到本地
         UserDefaults.standard.set(rotationSpeed, forKey: key)
+        // 保存到共享存储
+        if sharedData.isConfigured {
+            sharedData.saveRotationSpeed(rotationSpeed)
+        }
     }
 
     /// 设置转经速度

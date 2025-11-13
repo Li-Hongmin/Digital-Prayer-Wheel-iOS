@@ -33,6 +33,14 @@
       },
       "versions": [
         {
+          "version": "1.2",
+          "buildVersion": "3",
+          "date": "2025-11-10T14:00:00+08:00",
+          "localizedDescription": "功能完善更新 - 数据同步与自动补转\n• 🆕 iOS 和 Watch 数据同步：使用 App Group 实现数据共享\n• 🆕 智能数据合并：自动取最大值，避免数据丢失\n• 🆕 iOS 自动补圈功能：iOS 和 Watch 都支持离线补圈\n• 🐛 修复 Watch 计数不准确的问题\n• 🐛 修复今日功德统计显示问题\n• 优化补圈算法：更精确的计算逻辑\n• 优化存储机制：双重备份（本地 + 共享）\n• 免费方案：无需付费开发者账号",
+          "downloadURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/releases/Digital-Prayer-Wheel-v1.2.ipa",
+          "minOSVersion": "16.0"
+        },
+        {
           "version": "1.0",
           "buildVersion": "1",
           "date": "2025-01-15T10:00:00+08:00",

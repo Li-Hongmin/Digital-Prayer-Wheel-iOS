@@ -16,6 +16,7 @@ struct RealisticWheelView: View {
     @State private var rotationTimer: Timer?
     @State private var isRotating: Bool = false
     @State private var glowOpacity: Double = 0.6
+    @State private var accumulatedRotation: Double = 0  // Accumulated rotation for counting
 
     private var timePerRotation: Double {
         60.0 / library.rotationSpeed
@@ -169,22 +170,26 @@ struct RealisticWheelView: View {
 
     private func startRotation() {
         isRotating = true
+        accumulatedRotation = 0  // Reset accumulated rotation
 
         rotationTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { _ in
             Task { @MainActor in
                 withAnimation(.linear(duration: 1.0 / 30.0)) {
                     rotation += anglePerFrame
+                    accumulatedRotation += anglePerFrame
                 }
 
-                // Increment count every full rotation
-                let currentRotations = rotation / 360.0
-                let completedRotations = floor(currentRotations)
+                // Increment count every full rotation (360 degrees)
+                if accumulatedRotation >= 360.0 {
+                    // Complete one rotation, increment count
+                    library.incrementCount()
+                    accumulatedRotation -= 360.0  // Reset for next rotation
+                    print("✅ Completed one rotation - Count: \(library.todayCount)")
+                }
 
-                if completedRotations > 0 && Int(completedRotations) % 1 == 0 {
-                    let rotationsToAdd = Int(completedRotations) - Int(floor(Double(library.todayCount)))
-                    if rotationsToAdd > 0 {
-                        _ = library.getNextText()
-                    }
+                // Reset visual rotation to prevent overflow
+                if rotation >= 360.0 {
+                    rotation -= 360.0
                 }
 
                 // Glow effect
@@ -192,7 +197,7 @@ struct RealisticWheelView: View {
             }
         }
 
-        print("▶️ Started rotation")
+        print("▶️ Started rotation at \(library.rotationSpeed) RPM")
     }
 
     private func stopRotation() {
