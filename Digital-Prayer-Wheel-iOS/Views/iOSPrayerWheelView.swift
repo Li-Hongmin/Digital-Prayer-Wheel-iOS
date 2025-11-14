@@ -175,25 +175,11 @@ struct iOSPrayerWheelView: View {
                                 .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
                                 .frame(width: scale.size(140), height: scale.size(140))
 
-                            ZStack(alignment: .center) {
-                                Text("卍")
-                                    .font(.system(size: scale.fontSize(100), weight: .bold))
-                                    .foregroundColor(.white)
-                                    .rotationEffect(.degrees(rotation))
-                                    .offset(y: scale.size(-2))  // Slight upward offset to center visually
-
-                                // Display loaded count in center (small text at bottom)
-                                if loadingManager.isLoaded, let data = loadingManager.loadedData {
-                                    VStack {
-                                        Spacer()
-                                        Text(formatCountShort(data.repeatCount))
-                                            .font(.system(size: scale.fontSize(10), weight: .medium))
-                                            .foregroundColor(.white.opacity(0.7))
-                                            .padding(.bottom, scale.size(10))
-                                    }
-                                    .frame(width: scale.size(140), height: scale.size(140))
-                                }
-                            }
+                            Text("卍")
+                                .font(.system(size: scale.fontSize(100), weight: .bold))
+                                .foregroundColor(.white)
+                                .rotationEffect(.degrees(rotation))
+                                .offset(y: scale.size(-2))  // Slight upward offset to center visually
                         }
                         .frame(height: scale.size(180))
                         .scaleEffect(wheelTapScale * loadingCompleteScale)
