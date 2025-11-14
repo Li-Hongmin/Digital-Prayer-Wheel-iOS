@@ -98,61 +98,94 @@ struct iOSLandscapePrayerWheelView: View {
                 BuddhistTeachingsView(initiallyExpanded: true, twoColumnMode: true, onlyVows: true)
                     .frame(maxWidth: .infinity)
 
-                // 中间：转经筒 + 统计
+                // 中间：转经筒 + 牌位图标 + 统计
                 VStack(spacing: scale.size(12)) {
-                    // 转经筒
-                    ZStack {
-                        Circle()
-                            .stroke(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(red: 0.99, green: 0.84, blue: 0.15),
-                                        Color(red: 0.96, green: 0.78, blue: 0.10)
-                                    ]),
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: scale.size(4)
-                            )
-                            .frame(width: scale.size(200), height: scale.size(200))
-
-                        Circle()
-                            .fill(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(red: 0.90, green: 0.82, blue: 0.55),
-                                        Color(red: 0.75, green: 0.63, blue: 0.35)
-                                    ]),
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(width: scale.size(188), height: scale.size(188))
-
-                        Circle()
-                            .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
-                            .frame(width: scale.size(176), height: scale.size(176))
-
-                        Text("卍")
-                            .font(.system(size: scale.fontSize(120), weight: .bold))
-                            .foregroundColor(.white)
-                            .rotationEffect(.degrees(rotation))
-                            .offset(y: scale.size(-2))
-                    }
-                    .scaleEffect(wheelTapScale * loadingCompleteScale)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            wheelTapScale = 0.95
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                wheelTapScale = 1.0
+                    // 转经筒 + 左右牌位
+                    HStack(spacing: scale.size(16)) {
+                        // 左侧牌位图标（吉祥牌位）
+                        MemorialTabletIconView(
+                            title: "吉祥牌位",
+                            backgroundColor: Color(red: 0.90, green: 0.11, blue: 0.14),
+                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),
+                            textColor: Color.black
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showLeftTablet.toggle()
+                                if showLeftTablet {
+                                    showRightTablet = false
+                                }
                             }
                         }
-                        if isRotating {
-                            stopRotation()
-                        } else {
-                            startRotation()
+
+                        // 转经筒
+                        ZStack {
+                            Circle()
+                                .stroke(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.99, green: 0.84, blue: 0.15),
+                                            Color(red: 0.96, green: 0.78, blue: 0.10)
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: scale.size(4)
+                                )
+                                .frame(width: scale.size(180), height: scale.size(180))
+
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.90, green: 0.82, blue: 0.55),
+                                            Color(red: 0.75, green: 0.63, blue: 0.35)
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: scale.size(168), height: scale.size(168))
+
+                            Circle()
+                                .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
+                                .frame(width: scale.size(156), height: scale.size(156))
+
+                            Text("卍")
+                                .font(.system(size: scale.fontSize(100), weight: .bold))
+                                .foregroundColor(.white)
+                                .rotationEffect(.degrees(rotation))
+                                .offset(y: scale.size(-2))
+                        }
+                        .scaleEffect(wheelTapScale * loadingCompleteScale)
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                wheelTapScale = 0.95
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    wheelTapScale = 1.0
+                                }
+                            }
+                            if isRotating {
+                                stopRotation()
+                            } else {
+                                startRotation()
+                            }
+                        }
+
+                        // 右侧牌位图标（往生牌位）
+                        MemorialTabletIconView(
+                            title: "往生牌位",
+                            backgroundColor: Color(red: 1.0, green: 0.84, blue: 0.0),
+                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),
+                            textColor: Color.black
+                        ) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showRightTablet.toggle()
+                                if showRightTablet {
+                                    showLeftTablet = false
+                                }
+                            }
                         }
                     }
 
