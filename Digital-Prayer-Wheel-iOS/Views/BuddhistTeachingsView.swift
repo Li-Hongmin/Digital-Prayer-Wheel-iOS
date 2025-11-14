@@ -10,6 +10,8 @@ import SwiftUI
 /// 佛学教导可折叠视图（往生正因、观无量寿佛经）
 struct BuddhistTeachingsView: View {
     var initiallyExpanded: Bool = false
+    var twoColumnMode: Bool = false  // 横屏模式：两列显示
+    var onlyVows: Bool = false  // 只显示普贤十大愿（横屏左侧用）
     @State private var expandedSections: Set<String> = []
     @Environment(\.responsiveScale) var responsiveScale
 
@@ -56,8 +58,11 @@ struct BuddhistTeachingsView: View {
     var body: some View {
         let scale = responsiveScale ?? ResponsiveScale()
 
+        // Filter teachings if onlyVows is true
+        let displayTeachings = onlyVows ? teachings.filter { $0.id == "vows" } : teachings
+
         VStack(spacing: scale.size(8)) {
-            ForEach(teachings, id: \.id) { teaching in
+            ForEach(displayTeachings, id: \.id) { teaching in
                 VStack(spacing: 0) {
                     // 标题行
                     HStack(spacing: scale.size(8)) {
@@ -88,35 +93,75 @@ struct BuddhistTeachingsView: View {
                     if expandedSections.contains(teaching.id) {
                         VStack(alignment: .leading, spacing: scale.size(8)) {
                             if teaching.id == "vows" {
-                                // 普贤十大愿 - 两行，每行5个
-                                VStack(alignment: .leading, spacing: scale.size(6)) {
-                                    // 第一行 1-5
-                                    HStack(spacing: scale.size(6)) {
-                                        ForEach(0..<5, id: \.self) { index in
-                                            HStack(spacing: scale.size(4)) {
-                                                Text("\(index + 1)")
-                                                    .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
-                                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                                Text(teaching.content[index])
-                                                    .font(.system(size: scale.fontSize(11), weight: .medium))
-                                                    .foregroundColor(.white)
+                                // 普贤十大愿 - 根据模式显示
+                                if twoColumnMode {
+                                    // 横屏模式：两列显示（1-5 左列，6-10 右列）
+                                    HStack(alignment: .top, spacing: scale.size(12)) {
+                                        // 左列：1-5
+                                        VStack(alignment: .leading, spacing: scale.size(6)) {
+                                            ForEach(0..<5, id: \.self) { index in
+                                                HStack(spacing: scale.size(4)) {
+                                                    Text("\(index + 1)")
+                                                        .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
+                                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                                    Text(teaching.content[index])
+                                                        .font(.system(size: scale.fontSize(11), weight: .medium))
+                                                        .foregroundColor(.white)
+                                                        .lineLimit(1)
+                                                        .minimumScaleFactor(0.8)
+                                                }
                                             }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
                                         }
-                                    }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                                    // 第二行 6-10
-                                    HStack(spacing: scale.size(6)) {
-                                        ForEach(5..<10, id: \.self) { index in
-                                            HStack(spacing: scale.size(4)) {
-                                                Text("\(index + 1)")
-                                                    .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
-                                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                                                Text(teaching.content[index])
-                                                    .font(.system(size: scale.fontSize(11), weight: .medium))
-                                                    .foregroundColor(.white)
+                                        // 右列：6-10
+                                        VStack(alignment: .leading, spacing: scale.size(6)) {
+                                            ForEach(5..<10, id: \.self) { index in
+                                                HStack(spacing: scale.size(4)) {
+                                                    Text("\(index + 1)")
+                                                        .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
+                                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                                    Text(teaching.content[index])
+                                                        .font(.system(size: scale.fontSize(11), weight: .medium))
+                                                        .foregroundColor(.white)
+                                                        .lineLimit(1)
+                                                        .minimumScaleFactor(0.8)
+                                                }
                                             }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                } else {
+                                    // 竖屏模式：两行，每行5个
+                                    VStack(alignment: .leading, spacing: scale.size(6)) {
+                                        // 第一行 1-5
+                                        HStack(spacing: scale.size(6)) {
+                                            ForEach(0..<5, id: \.self) { index in
+                                                HStack(spacing: scale.size(4)) {
+                                                    Text("\(index + 1)")
+                                                        .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
+                                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                                    Text(teaching.content[index])
+                                                        .font(.system(size: scale.fontSize(11), weight: .medium))
+                                                        .foregroundColor(.white)
+                                                }
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            }
+                                        }
+
+                                        // 第二行 6-10
+                                        HStack(spacing: scale.size(6)) {
+                                            ForEach(5..<10, id: \.self) { index in
+                                                HStack(spacing: scale.size(4)) {
+                                                    Text("\(index + 1)")
+                                                        .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
+                                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                                                    Text(teaching.content[index])
+                                                        .font(.system(size: scale.fontSize(11), weight: .medium))
+                                                        .foregroundColor(.white)
+                                                }
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            }
                                         }
                                     }
                                 }

@@ -10,6 +10,7 @@ import SwiftUI
 /// 回向偈显示视图
 struct DedicationVerseView: View {
     @ObservedObject var settings: AppSettings
+    var compactMode: Bool = false  // 紧凑模式（横屏底部使用）
     @Environment(\.responsiveScale) var responsiveScale
     @State private var isExpanded: Bool = true  // 默认展开
 
@@ -40,62 +41,106 @@ struct DedicationVerseView: View {
         let scale = responsiveScale ?? ResponsiveScale()
         let currentVerse = verses[settings.selectedDedicationVerse] ?? verses[1]!
 
-        VStack(spacing: 0) {
-            // 标题
-            HStack(spacing: scale.size(8)) {
-                Image(systemName: "hands.sparkles.fill")
-                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                    .font(.system(size: scale.fontSize(12)))
+        if compactMode {
+            // 紧凑模式：横屏底部横向两行显示，无折叠功能
+            VStack(alignment: .center, spacing: scale.size(4)) {
+                // 标题（小号）
+                HStack(spacing: scale.size(6)) {
+                    Image(systemName: "hands.sparkles.fill")
+                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                        .font(.system(size: scale.fontSize(10)))
 
-                Text("回向偈")
-                    .font(.system(size: scale.fontSize(12), weight: .semibold))
-                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-
-                Spacer()
-
-                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                    .font(.system(size: scale.fontSize(10), weight: .semibold))
-                    .foregroundColor(Color.white.opacity(0.6))
-            }
-            .padding(.horizontal, scale.size(12))
-            .padding(.vertical, scale.size(8))
-            .background(Color(red: 0.18, green: 0.18, blue: 0.20))
-            .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isExpanded.toggle()
+                    Text("回向偈")
+                        .font(.system(size: scale.fontSize(10), weight: .semibold))
+                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                 }
-            }
 
-            // 回向偈内容 - 两行显示
-            if isExpanded {
+                // 内容 - 两行横向显示
                 VStack(alignment: .center, spacing: scale.size(3)) {
-                // 第一行
-                HStack(spacing: scale.size(8)) {
-                    ForEach(0..<min(2, currentVerse.count), id: \.self) { index in
-                        Text(currentVerse[index])
-                            .font(.system(size: scale.fontSize(13), weight: .regular))
-                            .foregroundColor(.white)
-                    }
-                }
-
-                // 第二行
-                if currentVerse.count > 2 {
+                    // 第一行
                     HStack(spacing: scale.size(8)) {
-                        ForEach(2..<currentVerse.count, id: \.self) { index in
+                        ForEach(0..<min(2, currentVerse.count), id: \.self) { index in
                             Text(currentVerse[index])
-                                .font(.system(size: scale.fontSize(13), weight: .regular))
+                                .font(.system(size: scale.fontSize(11), weight: .regular))
                                 .foregroundColor(.white)
+                        }
+                    }
+
+                    // 第二行
+                    if currentVerse.count > 2 {
+                        HStack(spacing: scale.size(8)) {
+                            ForEach(2..<currentVerse.count, id: \.self) { index in
+                                Text(currentVerse[index])
+                                    .font(.system(size: scale.fontSize(11), weight: .regular))
+                                    .foregroundColor(.white)
+                            }
                         }
                     }
                 }
             }
             .padding(.horizontal, scale.size(12))
-            .padding(.vertical, scale.size(8))
+            .padding(.vertical, scale.size(6))
             .background(Color(red: 0.15, green: 0.15, blue: 0.17))
+            .cornerRadius(scale.size(6))
+        } else {
+            // 正常模式：可折叠
+            VStack(spacing: 0) {
+                // 标题
+                HStack(spacing: scale.size(8)) {
+                    Image(systemName: "hands.sparkles.fill")
+                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                        .font(.system(size: scale.fontSize(12)))
+
+                    Text("回向偈")
+                        .font(.system(size: scale.fontSize(12), weight: .semibold))
+                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+
+                    Spacer()
+
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.system(size: scale.fontSize(10), weight: .semibold))
+                        .foregroundColor(Color.white.opacity(0.6))
+                }
+                .padding(.horizontal, scale.size(12))
+                .padding(.vertical, scale.size(8))
+                .background(Color(red: 0.18, green: 0.18, blue: 0.20))
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isExpanded.toggle()
+                    }
+                }
+
+                // 回向偈内容 - 两行显示
+                if isExpanded {
+                    VStack(alignment: .center, spacing: scale.size(3)) {
+                    // 第一行
+                    HStack(spacing: scale.size(8)) {
+                        ForEach(0..<min(2, currentVerse.count), id: \.self) { index in
+                            Text(currentVerse[index])
+                                .font(.system(size: scale.fontSize(13), weight: .regular))
+                                .foregroundColor(.white)
+                        }
+                    }
+
+                    // 第二行
+                    if currentVerse.count > 2 {
+                        HStack(spacing: scale.size(8)) {
+                            ForEach(2..<currentVerse.count, id: \.self) { index in
+                                Text(currentVerse[index])
+                                    .font(.system(size: scale.fontSize(13), weight: .regular))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, scale.size(12))
+                .padding(.vertical, scale.size(8))
+                .background(Color(red: 0.15, green: 0.15, blue: 0.17))
+                }
             }
+            .background(Color(red: 0.12, green: 0.12, blue: 0.14))
+            .cornerRadius(scale.size(8))
         }
-        .background(Color(red: 0.12, green: 0.12, blue: 0.14))
-        .cornerRadius(scale.size(8))
     }
 }
 

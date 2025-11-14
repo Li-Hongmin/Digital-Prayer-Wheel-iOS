@@ -41,47 +41,23 @@ struct iOSLandscapePrayerWheelView: View {
 
     var body: some View {
         let scale = responsiveScale ?? ResponsiveScale()
+        let multiplier = loadingManager.multiplier
+        let todayMerit = prayerLibrary.todayCount * multiplier
+        let totalDays = Set(prayerLibrary.statistics.dailyRecords.map {
+            Calendar.current.startOfDay(for: $0.date)
+        }).count
 
-        VStack(spacing: scale.size(8)) {
-            // 装载完成横幅
-            if showLoadingCompleteBanner, let data = loadingManager.loadedData {
-                HStack(spacing: scale.size(8)) {
-                    Image(systemName: "checkmark.seal.fill")
-                        .font(.system(size: scale.fontSize(16)))
-                        .foregroundColor(.green)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("装载完成！")
-                            .font(.system(size: scale.fontSize(13), weight: .bold))
-                            .foregroundColor(.white)
-
-                        Text("轮内已装载 \(formatCount(data.repeatCount)) 遍")
-                            .font(.system(size: scale.fontSize(11)))
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-
-                    Spacer()
-                }
-                .padding(.horizontal, scale.size(12))
-                .padding(.vertical, scale.size(8))
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.green.opacity(0.8))
-                )
-                .padding(.horizontal, scale.size(16))
-                .transition(.move(edge: .top).combined(with: .opacity))
-            }
-
-            // 最顶部：功课名居中，按钮在右侧
+        VStack(spacing: 0) {
+            // 顶部：标题栏 + 按钮
             ZStack {
                 // 经文名 + 装载信息（居中层）
                 VStack(spacing: scale.size(4)) {
                     Text(prayerLibrary.selectedType.rawValue)
-                        .font(.system(size: scale.fontSize(22), weight: .bold))
+                        .font(.system(size: scale.fontSize(20), weight: .bold))
                         .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                         .shadow(
                             color: Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.8 * glowOpacity),
-                            radius: scale.size(12),
+                            radius: scale.size(10),
                             x: 0,
                             y: 0
                         )
@@ -90,10 +66,10 @@ struct iOSLandscapePrayerWheelView: View {
                     if loadingManager.isLoaded, let data = loadingManager.loadedData {
                         HStack(spacing: scale.size(4)) {
                             Image(systemName: "doc.text.fill")
-                                .font(.system(size: scale.fontSize(10)))
+                                .font(.system(size: scale.fontSize(9)))
                             Text("轮内：\(formatCount(data.repeatCount)) 遍")
                         }
-                        .font(.system(size: scale.fontSize(10), weight: .medium))
+                        .font(.system(size: scale.fontSize(9), weight: .medium))
                         .foregroundColor(.white.opacity(0.6))
                     }
                 }
@@ -104,164 +80,105 @@ struct iOSLandscapePrayerWheelView: View {
                     Spacer()
                     Button(action: { showHelp.toggle() }) {
                         Image(systemName: "questionmark.circle")
-                            .font(.system(size: scale.fontSize(16)))
+                            .font(.system(size: scale.fontSize(14)))
                     }
-                    // TODO: 分享功能暂时隐藏，待完善后启用
-                    // Button(action: { startVideoRecording() }) {
-                    //     Image(systemName: videoRecorder.isRecording ? "record.circle.fill" : "video.circle")
-                    //         .font(.system(size: scale.fontSize(16)))
-                    //         .foregroundColor(videoRecorder.isRecording ? .red : Color(red: 0.99, green: 0.84, blue: 0.15))
-                    // }
-                    // .disabled(videoRecorder.isRecording)
                     Button(action: { showSettings.toggle() }) {
                         Image(systemName: "gear")
-                            .font(.system(size: scale.fontSize(16)))
+                            .font(.system(size: scale.fontSize(14)))
                     }
                 }
             }
             .padding(.horizontal, scale.size(16))
             .padding(.top, scale.size(8))
+            .padding(.bottom, scale.size(8))
 
-            // 可滚动内容区域
-            ScrollView {
-                VStack(spacing: scale.size(8)) {
-                    // 转经筒主体 + 牌位图标
-                    HStack(spacing: scale.size(16)) {
-                        // 左侧牌位图标（吉祥牌位-红底金边黑字）
-                        MemorialTabletIconView(
-                            title: "吉祥牌位",
-                            backgroundColor: Color(red: 0.90, green: 0.11, blue: 0.14), // 红底
-                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),     // 金边
-                            textColor: Color.black                                       // 黑字
-                        ) {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                showLeftTablet.toggle()
-                                if showLeftTablet {
-                                    showRightTablet = false
-                                }
-                            }
-                        }
+            // 中间：左中右三栏布局
+            HStack(alignment: .top, spacing: scale.size(12)) {
+                // 左侧：普贤十大愿（两列）
+                BuddhistTeachingsView(initiallyExpanded: true, twoColumnMode: true, onlyVows: true)
+                    .frame(maxWidth: .infinity)
 
-                        // 转经筒
-                        ZStack {
-                            Circle()
-                                .stroke(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            Color(red: 0.99, green: 0.84, blue: 0.15),
-                                            Color(red: 0.96, green: 0.78, blue: 0.10)
-                                        ]),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: scale.size(3)
+                // 中间：转经筒 + 统计
+                VStack(spacing: scale.size(12)) {
+                    // 转经筒
+                    ZStack {
+                        Circle()
+                            .stroke(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.99, green: 0.84, blue: 0.15),
+                                        Color(red: 0.96, green: 0.78, blue: 0.10)
+                                    ]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: scale.size(4)
+                            )
+                            .frame(width: scale.size(200), height: scale.size(200))
+
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.90, green: 0.82, blue: 0.55),
+                                        Color(red: 0.75, green: 0.63, blue: 0.35)
+                                    ]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
                                 )
-                                .frame(width: scale.size(160), height: scale.size(160))
+                            )
+                            .frame(width: scale.size(188), height: scale.size(188))
 
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            Color(red: 0.90, green: 0.82, blue: 0.55),
-                                            Color(red: 0.75, green: 0.63, blue: 0.35)
-                                        ]),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: scale.size(150), height: scale.size(150))
+                        Circle()
+                            .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
+                            .frame(width: scale.size(176), height: scale.size(176))
 
-                            Circle()
-                                .stroke(Color(red: 0.99, green: 0.84, blue: 0.15), lineWidth: scale.size(2))
-                                .frame(width: scale.size(140), height: scale.size(140))
-
-                            ZStack(alignment: .center) {
-                                Text("卍")
-                                    .font(.system(size: scale.fontSize(100), weight: .bold))
-                                    .foregroundColor(.white)
-                                    .rotationEffect(.degrees(rotation))
-                                    .offset(y: scale.size(-2))  // Slight upward offset to center visually
-
-                                // Display loaded count in center (small text at bottom)
-                                if loadingManager.isLoaded, let data = loadingManager.loadedData {
-                                    VStack {
-                                        Spacer()
-                                        Text(formatCountShort(data.repeatCount))
-                                            .font(.system(size: scale.fontSize(10), weight: .medium))
-                                            .foregroundColor(.white.opacity(0.7))
-                                            .padding(.bottom, scale.size(10))
-                                    }
-                                    .frame(width: scale.size(140), height: scale.size(140))
-                                }
-                            }
+                        Text("卍")
+                            .font(.system(size: scale.fontSize(120), weight: .bold))
+                            .foregroundColor(.white)
+                            .rotationEffect(.degrees(rotation))
+                            .offset(y: scale.size(-2))
+                    }
+                    .scaleEffect(wheelTapScale * loadingCompleteScale)
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            wheelTapScale = 0.95
                         }
-                        .frame(height: scale.size(180))
-                        .scaleEffect(wheelTapScale * loadingCompleteScale)
-                        .onTapGesture {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             withAnimation(.easeInOut(duration: 0.15)) {
-                                wheelTapScale = 0.95
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                withAnimation(.easeInOut(duration: 0.15)) {
-                                    wheelTapScale = 1.0
-                                }
-                            }
-                            if isRotating {
-                                stopRotation()
-                            } else {
-                                startRotation()
+                                wheelTapScale = 1.0
                             }
                         }
-
-                        // 右侧牌位图标（往生牌位-金底金边黑字）
-                        MemorialTabletIconView(
-                            title: "往生牌位",
-                            backgroundColor: Color(red: 1.0, green: 0.84, blue: 0.0), // 金底
-                            borderColor: Color(red: 0.99, green: 0.84, blue: 0.15),   // 金边
-                            textColor: Color.black                                     // 黑字
-                        ) {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                showRightTablet.toggle()
-                                if showRightTablet {
-                                    showLeftTablet = false
-                                }
-                            }
+                        if isRotating {
+                            stopRotation()
+                        } else {
+                            startRotation()
                         }
                     }
 
-                    // 计数显示 - 左右分布
-                    let multiplier = loadingManager.multiplier
-                    let todayMerit = prayerLibrary.todayCount * multiplier
-
-                    // 计算累计转经天数（有记录的天数）
-                    let totalDays = Set(prayerLibrary.statistics.dailyRecords.map {
-                        Calendar.current.startOfDay(for: $0.date)
-                    }).count
-
-                    HStack(spacing: scale.size(16)) {
-                        // 左侧：今日功德（左对齐，可点击查看日历）
-                        VStack(alignment: .leading, spacing: scale.size(4)) {
+                    // 统计信息
+                    VStack(spacing: scale.size(16)) {
+                        // 今日功德
+                        VStack(spacing: scale.size(4)) {
                             HStack(spacing: scale.size(4)) {
                                 Text("今日功德")
-                                    .font(.system(size: scale.fontSize(12), weight: .semibold))
+                                    .font(.system(size: scale.fontSize(11), weight: .semibold))
                                     .foregroundColor(Color.white.opacity(0.7))
                                 Image(systemName: "calendar")
-                                    .font(.system(size: scale.fontSize(10)))
+                                    .font(.system(size: scale.fontSize(9)))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15).opacity(0.6))
                             }
 
-                            VStack(alignment: .leading, spacing: scale.size(2)) {
+                            VStack(spacing: scale.size(2)) {
                                 Text("\(formatCount(todayMerit))")
-                                    .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
+                                    .font(.system(size: scale.fontSize(20), weight: .bold, design: .monospaced))
                                     .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
-                                // Always display physical rotation count (small text)
                                 Text("(\(prayerLibrary.todayCount) 圈)")
-                                    .font(.system(size: scale.fontSize(9), weight: .regular))
+                                    .font(.system(size: scale.fontSize(8), weight: .regular))
                                     .foregroundColor(Color.white.opacity(multiplier > 1 ? 0.5 : 0.0))
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .contentShape(Rectangle())
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.3)) {
@@ -269,40 +186,37 @@ struct iOSLandscapePrayerWheelView: View {
                             }
                         }
 
-                        // 右侧：累计天数（右对齐）
-                        VStack(alignment: .trailing, spacing: scale.size(4)) {
+                        // 累计天数
+                        VStack(spacing: scale.size(4)) {
                             Text("累计天数")
-                                .font(.system(size: scale.fontSize(12), weight: .semibold))
+                                .font(.system(size: scale.fontSize(11), weight: .semibold))
                                 .foregroundColor(Color.white.opacity(0.7))
 
-                            VStack(alignment: .trailing, spacing: scale.size(2)) {
-                                HStack(spacing: scale.size(4)) {
-                                    Text("\(totalDays)")
-                                        .font(.system(size: scale.fontSize(28), weight: .bold, design: .monospaced))
-                                        .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
+                            HStack(spacing: scale.size(4)) {
+                                Text("\(totalDays)")
+                                    .font(.system(size: scale.fontSize(24), weight: .bold, design: .monospaced))
+                                    .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
-                                    Text("天")
-                                        .font(.system(size: scale.fontSize(16), weight: .semibold))
-                                        .foregroundColor(Color.white.opacity(0.7))
-                                }
+                                Text("天")
+                                    .font(.system(size: scale.fontSize(14), weight: .semibold))
+                                    .foregroundColor(Color.white.opacity(0.7))
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .trailing)
                     }
-                    .padding(.horizontal, scale.size(12))
-                    .padding(.vertical, scale.size(12))
-
-                    // 佛学教导 - 下方（普贤十大愿 + 往生正因，竖屏自动展开）
-                    BuddhistTeachingsView(initiallyExpanded: true)
-                        .padding(.horizontal, scale.size(16))
-                        .padding(.vertical, scale.size(8))
-
-                    // 回向偈 - 最下方
-                    DedicationVerseView(settings: settings)
-                        .padding(.horizontal, scale.size(16))
-                        .padding(.bottom, scale.size(8))
                 }
+                .frame(maxWidth: .infinity)
+
+                // 右侧：净业正因（单列）
+                PureKarmaView(initiallyExpanded: true)
+                    .frame(maxWidth: .infinity)
             }
+            .padding(.horizontal, scale.size(16))
+            .frame(maxHeight: .infinity)
+
+            // 底部：回向偈（独立横向一行）
+            DedicationVerseView(settings: settings, compactMode: true)
+                .padding(.horizontal, scale.size(16))
+                .padding(.vertical, scale.size(8))
         }
         .background(Color(red: 0.12, green: 0.12, blue: 0.14))
         .overlay(

@@ -9,8 +9,8 @@ import SwiftUI
 
 /// 净业正因单独可折叠视图
 struct PureKarmaView: View {
-    var initiallyExpanded: Bool = false
-    @State private var isExpanded: Bool = false
+    var initiallyExpanded: Bool = true  // 默认展开
+    @State private var isExpanded: Bool = true  // 默认展开
     @Environment(\.responsiveScale) var responsiveScale
 
     let content = [
