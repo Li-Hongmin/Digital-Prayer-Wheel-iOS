@@ -5,8 +5,6 @@
 	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
 	<string>$(TeamIdentifierPrefix)Li-Hongmin.Digital-Prayer-Wheel</string>
 	<key>com.apple.security.application-groups</key>
-	<array>
-		<string>group.com.li-hongmin.digital-prayer-wheel</string>
-	</array>
+	<array/>
 </dict>
 </plist>
