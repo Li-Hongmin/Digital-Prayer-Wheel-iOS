@@ -68,10 +68,10 @@ struct BuddhistTeachingsView: View {
                     HStack(spacing: scale.size(8)) {
                         Image(systemName: teaching.icon)
                             .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
-                            .font(.system(size: scale.fontSize(12)))
+                            .font(.system(size: scale.fontSize(twoColumnMode ? 14 : 12)))
 
                         Text(teaching.title)
-                            .font(.system(size: scale.fontSize(12), weight: .semibold))
+                            .font(.system(size: scale.fontSize(twoColumnMode ? 14 : 12), weight: .semibold))
                             .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
 
                         Spacer()
@@ -98,14 +98,14 @@ struct BuddhistTeachingsView: View {
                                     // 横屏模式：两列显示（1-5 左列，6-10 右列）
                                     HStack(alignment: .top, spacing: scale.size(12)) {
                                         // 左列：1-5
-                                        VStack(alignment: .leading, spacing: scale.size(6)) {
+                                        VStack(alignment: .leading, spacing: scale.size(8)) {
                                             ForEach(0..<5, id: \.self) { index in
-                                                HStack(spacing: scale.size(4)) {
+                                                HStack(spacing: scale.size(6)) {
                                                     Text("\(index + 1)")
-                                                        .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
+                                                        .font(.system(size: scale.fontSize(16), weight: .semibold, design: .monospaced))
                                                         .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                                     Text(teaching.content[index])
-                                                        .font(.system(size: scale.fontSize(11), weight: .medium))
+                                                        .font(.system(size: scale.fontSize(16), weight: .medium))
                                                         .foregroundColor(.white)
                                                         .lineLimit(1)
                                                         .minimumScaleFactor(0.8)
@@ -115,14 +115,14 @@ struct BuddhistTeachingsView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
 
                                         // 右列：6-10
-                                        VStack(alignment: .leading, spacing: scale.size(6)) {
+                                        VStack(alignment: .leading, spacing: scale.size(8)) {
                                             ForEach(5..<10, id: \.self) { index in
-                                                HStack(spacing: scale.size(4)) {
+                                                HStack(spacing: scale.size(6)) {
                                                     Text("\(index + 1)")
-                                                        .font(.system(size: scale.fontSize(11), weight: .semibold, design: .monospaced))
+                                                        .font(.system(size: scale.fontSize(16), weight: .semibold, design: .monospaced))
                                                         .foregroundColor(Color(red: 0.99, green: 0.84, blue: 0.15))
                                                     Text(teaching.content[index])
-                                                        .font(.system(size: scale.fontSize(11), weight: .medium))
+                                                        .font(.system(size: scale.fontSize(16), weight: .medium))
                                                         .foregroundColor(.white)
                                                         .lineLimit(1)
                                                         .minimumScaleFactor(0.8)
