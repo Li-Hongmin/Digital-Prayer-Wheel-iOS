@@ -25,7 +25,11 @@ class SharedDataManager: ObservableObject {
     /// 2. 点击 "+ Capability" -> 选择 "App Groups"
     /// 3. 点击 "+" 添加 App Group，命名为：group.com.yourname.digital-prayer-wheel
     /// 4. 对 iOS App 和 Watch App 都重复此步骤，使用相同的 Group ID
-    private static let appGroupID = "group.com.yourname.digital-prayer-wheel"
+    // 🔧 配置说明：
+    // 1. 如果您已在 Xcode 中配置了 App Group，将下面的 ID 改为您的 Group ID
+    // 2. 如果未配置，保持原样，应用会自动使用本地存储（iOS 和 Watch 数据独立）
+    // 3. 当前检测到的 Group ID: group.com.li-hongmin.digital-prayer-wheel
+    private static let appGroupID = "group.com.li-hongmin.digital-prayer-wheel"
 
     // Shared UserDefaults
     private let sharedDefaults: UserDefaults?
