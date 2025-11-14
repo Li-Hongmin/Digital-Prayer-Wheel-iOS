@@ -15,7 +15,10 @@ class PrayerLibrary: ObservableObject {
     @Published var statistics = PrayerStatistics()
 
     // 共享数据管理器 (iOS 和 Watch 同步)
+    // Note: Only available on iOS, watchOS uses local storage only
+    #if os(iOS)
     private let sharedData = SharedDataManager.shared
+    #endif
 
     // 当前选择的经文类型
     @Published var selectedType: PrayerType = .amitabha {
@@ -23,8 +26,10 @@ class PrayerLibrary: ObservableObject {
             loadTextsForCurrentType()
             loadCount()
             checkDailyReset() // 切换经文时也检查是否需要重置
-            // Sync type change to shared storage
+            // Sync type change to shared storage (iOS only)
+            #if os(iOS)
             sharedData.saveSelectedType(selectedType.rawValue)
+            #endif
         }
     }
 
@@ -182,7 +187,8 @@ class PrayerLibrary: ObservableObject {
         // 检查是否需要重置（跨日检测）
         checkDailyReset()
 
-        // Try to load from shared storage first
+        #if os(iOS)
+        // Try to load from shared storage first (iOS only)
         if sharedData.isConfigured {
             let (sharedTodayCount, sharedTotalCycles) = sharedData.loadCount(type: selectedType.rawValue)
 
@@ -204,6 +210,11 @@ class PrayerLibrary: ObservableObject {
             totalCycles = UserDefaults.standard.integer(forKey: "TotalCycles_\(selectedType.rawValue)")
             print("⚠️ App Group not configured, using local storage only")
         }
+        #else
+        // watchOS: Use local storage only
+        todayCount = UserDefaults.standard.integer(forKey: "TodayCount_\(selectedType.rawValue)")
+        totalCycles = UserDefaults.standard.integer(forKey: "TotalCycles_\(selectedType.rawValue)")
+        #endif
     }
 
     /// 保存计数 - 同时保存到本地和共享存储
@@ -215,10 +226,12 @@ class PrayerLibrary: ObservableObject {
         UserDefaults.standard.set(todayCount, forKey: todayKey)
         UserDefaults.standard.set(totalCycles, forKey: totalCyclesKey)
 
-        // 同时保存到共享存储 (iOS 和 Watch 同步)
+        // 同时保存到共享存储 (iOS only)
+        #if os(iOS)
         if sharedData.isConfigured {
             sharedData.saveCount(type: selectedType.rawValue, todayCount: todayCount, totalCycles: totalCycles)
         }
+        #endif
 
         // 更新保存时间（用于UI显示）
         lastCountSaveTime = Date()
@@ -243,6 +256,7 @@ class PrayerLibrary: ObservableObject {
 
     /// 加载转经速度 - 优先从共享存储加载
     private func loadRotationSpeed() {
+        #if os(iOS)
         if sharedData.isConfigured {
             rotationSpeed = sharedData.loadRotationSpeed()
         } else {
@@ -250,6 +264,12 @@ class PrayerLibrary: ObservableObject {
             let speed = UserDefaults.standard.double(forKey: key)
             rotationSpeed = speed > 0 ? speed : 30
         }
+        #else
+        // watchOS: Use local storage only
+        let key = "RotationSpeed"
+        let speed = UserDefaults.standard.double(forKey: key)
+        rotationSpeed = speed > 0 ? speed : 30
+        #endif
     }
 
     /// 保存转经速度 - 同时保存到本地和共享存储
@@ -257,10 +277,12 @@ class PrayerLibrary: ObservableObject {
         let key = "RotationSpeed"
         // 保存到本地
         UserDefaults.standard.set(rotationSpeed, forKey: key)
-        // 保存到共享存储
+        // 保存到共享存储 (iOS only)
+        #if os(iOS)
         if sharedData.isConfigured {
             sharedData.saveRotationSpeed(rotationSpeed)
         }
+        #endif
     }
 
     /// 设置转经速度
