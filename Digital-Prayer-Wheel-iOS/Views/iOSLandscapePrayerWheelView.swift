@@ -156,9 +156,9 @@ struct iOSLandscapePrayerWheelView: View {
                         }
                     }
 
-                    // 统计信息
-                    VStack(spacing: scale.size(16)) {
-                        // 今日功德
+                    // 统计信息 - 左右并排一行
+                    HStack(spacing: scale.size(24)) {
+                        // 左侧：今日功德
                         VStack(spacing: scale.size(4)) {
                             HStack(spacing: scale.size(4)) {
                                 Text("今日功德")
@@ -179,6 +179,7 @@ struct iOSLandscapePrayerWheelView: View {
                                     .foregroundColor(Color.white.opacity(multiplier > 1 ? 0.5 : 0.0))
                             }
                         }
+                        .frame(maxWidth: .infinity)
                         .contentShape(Rectangle())
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.3)) {
@@ -186,7 +187,7 @@ struct iOSLandscapePrayerWheelView: View {
                             }
                         }
 
-                        // 累计天数
+                        // 右侧：累计天数
                         VStack(spacing: scale.size(4)) {
                             Text("累计天数")
                                 .font(.system(size: scale.fontSize(11), weight: .semibold))
@@ -202,6 +203,7 @@ struct iOSLandscapePrayerWheelView: View {
                                     .foregroundColor(Color.white.opacity(0.7))
                             }
                         }
+                        .frame(maxWidth: .infinity)
                     }
                 }
                 .frame(maxWidth: .infinity)
