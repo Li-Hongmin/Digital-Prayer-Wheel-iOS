@@ -26,31 +26,13 @@
       ],
       "versions": [
         {
-          "version": "1.2",
-          "buildVersion": "3",
-          "date": "2025-11-10T14:00:00+08:00",
-          "localizedDescription": "功能完善更新 - 数据同步与自动补转\n• 🆕 iOS 和 Watch 数据同步：使用 App Group 实现数据共享\n• 🆕 智能数据合并：自动取最大值，避免数据丢失\n• 🆕 iOS 自动补圈功能：iOS 和 Watch 都支持离线补圈\n• 🐛 修复 Watch 计数不准确的问题\n• 🐛 修复今日功德统计显示问题\n• 优化补圈算法：更精确的计算逻辑\n• 优化存储机制：双重备份（本地 + 共享）\n• 免费方案：无需付费开发者账号\n\n⚙️ 配置说明：\n• 需要在 Xcode 中配置 App Group（详见 APP_GROUP_SETUP.md）\n• 配置后 iOS 和 Watch 数据自动同步\n• 未配置也可正常使用，但数据不同步",
-          "downloadURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/releases/Digital-Prayer-Wheel-v1.2.ipa",
-          "size": 1350000,
-          "minOSVersion": "16.0"
-        },
-        {
-          "version": "1.1",
+          "version": "1.3",
           "buildVersion": "2",
-          "date": "2025-11-09T22:30:00+08:00",
-          "localizedDescription": "重大更新 - Apple Watch 支持\n• 🆕 Apple Watch 独立应用：完全复刻 iOS 转经轮界面\n• 🆕 智能补圈系统：应用关闭期间自动补充转经圈数\n• 🆕 Digital Crown 调速：旋转表冠调节转速（6-600 圈/分）\n• 优化计数系统：改为简单整数累加\n• 新增每日独立计数：午夜自动重置\n• 新增累计天数统计：记录修行天数\n• 优化性能：定时保存机制\n• 兼容性优化：iOS 16.0+ / watchOS 8.0+\n\n支持设备：\n• iOS: iPhone 8 及更新机型 (2017+)\n• watchOS: Apple Watch Series 3/SE/Ultra 全系列",
-          "downloadURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/releases/Digital-Prayer-Wheel-v1.1.ipa",
-          "size": 1309769,
+          "date": "2025-11-14T19:30:00+08:00",
+          "localizedDescription": "UI 优化更新 - 横屏专属布局\n\n✨ 兼容性提升：\n• 🔧 修复系统兼容性：完美支持 iOS 16.0 - 18.x 全系列\n• 🔧 修复部署目标配置问题（之前错误要求 iOS 26.0）\n• 🔧 支持旧设备：iPhone 8/X/SE2 及以上全系列\n\n🎨 UI 优化：\n• 🆕 横屏专属布局：左中右三栏设计\n• 🆕 普贤十大愿两列显示（横屏模式）\n• 🆕 统计信息优化：今日功德和累计天数并排显示\n• 🆕 回向偈底部全宽显示（横屏模式）\n• 🆕 转经筒左右添加牌位图标\n• 🆕 移除转经筒内装载数量（更简洁）\n• 字号优化：左右内容字号统一\n\n🆕 核心功能：\n• Apple Watch 独立应用：完全复刻 iOS 转经轮界面\n• iOS 和 Watch 数据同步：使用 App Group 实现数据共享\n• 智能补圈系统：iOS 和 Watch 都支持离线自动补圈\n• Digital Crown 调速：6-600 圈/分钟灵活调节\n\n🐛 Bug 修复：\n• 修复 Watch 计数不准确的问题\n• 修复今日功德统计显示问题\n• 优化补圈算法：更精确的计算逻辑\n\n📱 兼容系统：iOS 16.0 ~ iOS 18.x",
+          "downloadURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/releases/Digital-Prayer-Wheel-v1.3.ipa",
+          "size": 1330112,
           "minOSVersion": "16.0"
-        },
-        {
-          "version": "1.0",
-          "buildVersion": "1",
-          "date": "2025-01-15T10:00:00+08:00",
-          "localizedDescription": "首次发布\n• 转经轮核心功能\n• 四种经文支持\n• 指数计数系统\n• 弹幕显示功能\n• iPhone 和 iPad 双平台支持",
-          "downloadURL": "https://li-hongmin.github.io/Digital-Prayer-Wheel-iOS/altstore/releases/Digital-Prayer-Wheel-v1.0.ipa",
-          "size": 742371,
-          "minOSVersion": "15.0"
         }
       ],
       "appPermissions": {
@@ -61,30 +43,12 @@
   ],
   "news": [
     {
-      "title": "至诚转经轮 1.2 - 数据同步完善",
-      "identifier": "digital-prayer-wheel-1.2-sync-release",
-      "caption": "功能完善更新！iOS 和 Watch 数据同步，智能补圈优化，修复计数问题。使用 App Group 免费方案，无需付费账号。",
-      "date": "2025-11-10T14:00:00+08:00",
+      "title": "至诚转经轮 1.3 - 横屏布局优化",
+      "identifier": "digital-prayer-wheel-1.3-landscape-release",
+      "caption": "UI 优化更新！全新横屏专属布局，左中右三栏设计。修复兼容性问题，支持 iOS 16.0+。",
+      "date": "2025-11-14T19:00:00+08:00",
       "tintColor": "D4AF37",
       "notify": true,
-      "appID": "Li-Hongmin.Digital-Prayer-Wheel"
-    },
-    {
-      "title": "至诚转经轮 1.1 - Apple Watch 支持",
-      "identifier": "digital-prayer-wheel-1.1-watch-release",
-      "caption": "重大更新！现已支持 Apple Watch，新增智能补圈系统，修行时间不浪费。抬腕即转，功德自动累积。",
-      "date": "2025-11-09T22:00:00+08:00",
-      "tintColor": "D4AF37",
-      "notify": false,
-      "appID": "Li-Hongmin.Digital-Prayer-Wheel"
-    },
-    {
-      "title": "至诚转经轮 1.0 发布",
-      "identifier": "digital-prayer-wheel-1.0-release",
-      "caption": "全新的佛教修行助手现已上线！支持四种经文，指数计数系统，适合长期修行使用。",
-      "date": "2025-01-15T10:00:00+08:00",
-      "tintColor": "D4AF37",
-      "notify": false,
       "appID": "Li-Hongmin.Digital-Prayer-Wheel"
     }
   ]

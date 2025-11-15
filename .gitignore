@@ -2,6 +2,7 @@
 
 # Build outputs
 *.ipa
+!altstore/releases/*.ipa
 *.app
 *.dSYM.zip
 *.dSYM
@@ -26,10 +27,6 @@ xcuserdata/
 *~
 .Spotlight-V100
 .Trashes
-
-# AltStore distribution (keep config, ignore generated files)
-altstore/releases/*.ipa
-altstore/screenshots/*.png
 
 # Temporary files
 screen_shot.png
