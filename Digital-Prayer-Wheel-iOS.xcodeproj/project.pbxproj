@@ -233,18 +233,18 @@
 				CODE_SIGN_ENTITLEMENTS = "Watch App for iOS App Watch App/Watch App for iOS App Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				DEVELOPMENT_TEAM = 3FE3289N6X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Watch App for iOS App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Li-Hongmin.Digital-Prayer-Wheel";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.lihongmin.digital-prayer-wheel";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel.watchkitapp";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lihongmin.digital-prayer-wheel.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -267,18 +267,18 @@
 				CODE_SIGN_ENTITLEMENTS = "Watch App for iOS App Watch App/Watch App for iOS App Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				DEVELOPMENT_TEAM = 3FE3289N6X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Watch App for iOS App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "Li-Hongmin.Digital-Prayer-Wheel";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.lihongmin.digital-prayer-wheel";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel.watchkitapp";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lihongmin.digital-prayer-wheel.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -424,7 +424,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Digital-Prayer-Wheel-iOS/Digital-Prayer-Wheel-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				DEVELOPMENT_TEAM = 3FE3289N6X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "至诚转经轮";
@@ -440,7 +440,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				NEW_SETTING = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lihongmin.digital-prayer-wheel";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -460,7 +460,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Digital-Prayer-Wheel-iOS/Digital-Prayer-Wheel-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z87QA5VWM9;
+				DEVELOPMENT_TEAM = 3FE3289N6X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "至诚转经轮";
@@ -476,7 +476,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				NEW_SETTING = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "Li-Hongmin.Digital-Prayer-Wheel";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lihongmin.digital-prayer-wheel";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
